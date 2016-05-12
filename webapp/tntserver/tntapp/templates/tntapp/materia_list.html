@@ -1,0 +1,18 @@
+
+<h1>Materias de UNPSJB</h1>
+
+<p>
+    <a href="{% url "materias:new" %}">Agregar materia</a>
+
+</p>
+<ul>
+    {% for materia in object_list %}
+        <li>
+            <p>{{ materia.nombre }}</p>
+            <p>
+                <a href="{% url "materias:edit" materia.id %}">Editar</a> |
+                <a href="{% url "materias:delete" materia.id %}">Borrar</a>
+            </p>
+        </li>
+    {% endfor %}
+</ul>
