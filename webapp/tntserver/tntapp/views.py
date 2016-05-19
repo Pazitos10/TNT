@@ -16,6 +16,10 @@ def index(request):
 class MateriaList(ListView):
     model = Materia
 
+    #para sobreescribir ubicacion y nombre de template por defecto
+    def get_template_names(self):
+        return ['tntapp/listado_materias.html']
+
 class MateriaCreation(CreateView):
     model = Materia
     success_url = reverse_lazy('materias:list')

@@ -1,0 +1,17 @@
+@charset "UTF-8";
+body{
+    padding-top: 80px;
+    background-color: #FFFFFF
+}
+
+.form-search-container{
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.list-wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
