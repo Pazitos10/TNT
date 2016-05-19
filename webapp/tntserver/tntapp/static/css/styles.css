@@ -10,8 +10,14 @@ body{
     align-items: center
 }
 
+
 .list-wrapper{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+.mapa-container{
+    width: 100%;
+    height: 400px;
 }
