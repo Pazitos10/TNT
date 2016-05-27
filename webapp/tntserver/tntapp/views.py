@@ -8,6 +8,12 @@ from django.views.generic.edit import (
     DeleteView
 )
 from .models import Materia
+from django.core import serializers
+from .models import Asistencia
+import datetime
+from rest_framework import viewsets
+from .serializers import *
+
 
 
 def index(request):
@@ -29,6 +35,25 @@ class MateriaUpdate(UpdateView):
     model = Materia
     success_url = reverse_lazy('materias:list')
     fields = ['nombre', 'lugar_de_dictado', 'anio_de_cursado', 'id_calendario']
+    
+def verMapa(request):
+    asis = Asistencia.objects.all()
+    return render(request, "verMapa/maps.html",{'asistencias': asis})
+
+#Rehacer
+def verMapaDia(request, dia):
+    ahora = datetime.date.today()
+    print asis
+    return render(request, "verMapa/maps.html",{'asistencias': asis})
+
+class AsistenciaViewSet(viewsets.ModelViewSet):
+    queryset = Asistencia.objects.all()
+    serializer_class = AsistenciaSerializer
+
+class MateriaViewSet(viewsets.ModelViewSet):
+    queryset = Materia.objects.all()
+    serializer_class = MateriaSerializer
+
 
 class MateriaDelete(DeleteView):
     model = Materia
