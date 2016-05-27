@@ -48,7 +48,6 @@ def verMapa(request):
 #Rehacer
 def verMapaDia(request, dia):
     ahora = datetime.date.today()
-    print asis
     return render(request, "verMapa/maps.html",{'asistencias': asis})
 
 class AsistenciaViewSet(viewsets.ModelViewSet):
