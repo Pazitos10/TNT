@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^', include('tntapp.urls', namespace='materias')),
     url(r'^materias/', include('tntapp.urls', namespace='materias')),
     url(r'^admin/', admin.site.urls),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
