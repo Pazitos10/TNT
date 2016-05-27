@@ -8,17 +8,9 @@ class Materia(models.Model):
     nombre = models.CharField(max_length=50)
     id_calendario = models.IntegerField()
 
-class Alumno(models.Model):
-    id = models.IntegerField(primary_key=True) #hash que viene de la app en android
-    nombre = models.CharField(max_length=50)
-    apellido = models.CharField(max_length=50)
-    email = models.EmailField()
-
-class AlumnoMateria(models.Model):
-    id_alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
-    id_materia = models.ForeignKey(Materia, on_delete=models.CASCADE)
-
 class Asistencia(models.Model):
-    id_alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
+    id_alumno = models.CharField(max_length=50)
     id_materia = models.ForeignKey(Materia, on_delete=models.CASCADE)
     fecha = models.DateTimeField()
+    latitud = models.FloatField(null = True)
+    longitud = models.FloatField(null = True)
