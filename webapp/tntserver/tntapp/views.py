@@ -22,8 +22,8 @@ def index(request):
 class MateriaList(ListView):
     model = Materia
 
-    #para sobreescribir ubicacion y nombre de template por defecto
-    def get_template_names(self):
+#para sobreescribir ubicacion y nombre de template por defecto
+def get_template_names(self):
         return ['tntapp/listado_materias.html']
 
 class MateriaCreation(CreateView):
@@ -36,6 +36,11 @@ class MateriaUpdate(UpdateView):
     success_url = reverse_lazy('materias:list')
     fields = ['nombre', 'lugar_de_dictado', 'anio_de_cursado', 'id_calendario']
     
+
+class MateriaDelete(DeleteView):
+    model = Materia
+    success_url = reverse_lazy('materias:list')
+
 def verMapa(request):
     asis = Asistencia.objects.all()
     return render(request, "verMapa/maps.html",{'asistencias': asis})
@@ -53,8 +58,3 @@ class AsistenciaViewSet(viewsets.ModelViewSet):
 class MateriaViewSet(viewsets.ModelViewSet):
     queryset = Materia.objects.all()
     serializer_class = MateriaSerializer
-
-
-class MateriaDelete(DeleteView):
-    model = Materia
-    success_url = reverse_lazy('materias:list')

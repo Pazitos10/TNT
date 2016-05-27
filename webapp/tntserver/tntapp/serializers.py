@@ -10,4 +10,4 @@ class MateriaSerializer(serializers.HyperlinkedModelSerializer):
 class AsistenciaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Asistencia
-        fields = ('id_alumno','fecha', 'latitud', 'longitud')
+        fields = ('fecha', 'latitud', 'longitud')
