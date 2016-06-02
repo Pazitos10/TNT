@@ -3,7 +3,7 @@
 {% block title%} yeah! {% endblock title%}
 
 {% block content%}
-    <h3 class="text-center">Materias de UNPSJB</h3>
+    <h4 class="text-center">Materias de UNPSJB</h4>
     <hr>
     <div class="col-lg-5" id="content-tabla">
         <div class="form-search-container">
@@ -11,30 +11,107 @@
                 <input type="text" id="search-term-input" class="form-control search-input" placeholder="Buscar" name="search">
                 <span id="search-term-button" class="glyphicon glyphicon-search"></span>
             </div>
-            {# <div class="form-inline">#}
-                {# <input type="text" class="form-control" placeholder="Mi materia">#}
-                {# <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>#}
-            {# </div>#}
-            {# <a class="btn btn-primary" href="{% url "materias:new" %}"><span class="glyphicon glyphicon-plus"></span>Agregar materia</a>#}
         </div>
-        <table class="table table-striped table-condensed">
-            <thead>
-                <th>Nombre</th>
-                <th class="text-right">Acciones</th>
-            </thead>
-            <tbody>
-                {% for materia in object_list %}
-                    <tr>
-                        <td>{{ materia.nombre }}</td>
-                        <td class="text-right">
-                            {# <a class="btn btn-default btn-sm " href="{% url "materias:view "  materia.id  %}" title="Ver"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>#}
-                            <a class="btn btn-primary btn-sm " href="{% url "materias:edit"  materia.id  %}" title="Editar"><span class="glyphicon glyphicon-pencil"></span></a>
-                            <a class="btn btn-danger btn-sm " href="{% url "materias:delete" materia.id %}" title="Borrar"><span class="glyphicon glyphicon-remove"></span></a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="panel card-container">
+            <div class="card" id="tnt-1">
+                <figure class="panel-body materia-card materia-front">
+                    <div class="descripcion">
+                        <h5> Taller de Nuevas Tecnologías </h5>
+                        <p class="text-muted subtitle">
+                            <strong> Apu/Lic. en sistemas - 5° - 1C </strong>
+                            <br><br>
+                        </p>
+                        <label class="label label-success">En Curso</label>
+                        <label class="label label-info">Práctica</label>
+                    </div>
+                    <div class="flip-card-btn flip-card-btn-back pull-right" data-id="tnt-1">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </div>
+                </figure>
+                <figure class="panel-body materia-card materia-back materia-online">
+                    <div class="flip-card-btn flip-card-btn-front" data-id="tnt-1">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </div>
+                    <div class="descripcion">
+                        <p>
+                            16 - 19Hs
+                            <span class="glyphicon glyphicon-time"></span>
+                        </p>
+                        <p>
+                            CC
+                            <span class="glyphicon glyphicon-map-marker"></span>
+                        </p>
+                    </div>
+                    <div class="asistencias asistencias-online">
+                        <p class="asistencias-value">7</p>
+                        <span class="glyphicon glyphicon-user"></span>
+                    </div>
+                </figure>
+            </div>
+        </div>
+
+        <div class="panel card-container">
+            <div class="card" id="tnt-2">
+                <figure class="panel-body materia-card materia-front">
+                    <div class="descripcion">
+                        <h5><strong> Taller de Nuevas Tecnologías </strong></h5>
+                        <p class="text-muted subtitle">
+                            <strong> Apu/Lic. en sistemas - 5° - 1C</strong>
+                        </p>
+                    </div>
+                    <div class="flip-card-btn flip-card-btn-back pull-right">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </div>
+                </figure>
+                <figure class="panel-body materia-card materia-back materia-offline">
+                    <div class="flip-card-btn flip-card-btn-front">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </div>
+                    <div class="descripcion">
+                        <p>
+                            L: 16 - 19 (T) <span class="glyphicon glyphicon-map-marker"></span><br>
+                            J: 17 - 20 (P) <span class="glyphicon glyphicon-map-marker"></span>
+                        </p>
+                    </div>
+                    <div class="asistencias asistencias-offline">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </div>
+                </figure>
+            </div>
+        </div>
+
+        <div class="panel card-container">
+            <div class="card" id="tnt-3">
+                <figure class="panel-body materia-card materia-front">
+                    <div class="descripcion">
+                        <h5><strong> Taller de Nuevas Tecnologías </strong></h5>
+                        <p class="text-muted subtitle">
+                            <strong> Apu/Lic. en sistemas - 5° - 1C</strong> <br><br>
+                            <label class="label label-primary">Mesa Exámen</label>
+                        </p>
+                    </div>
+                    <div class="flip-card-btn flip-card-btn-back pull-right">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </div>
+                </figure>
+                <figure class="panel-body materia-card materia-back materia-offline materia-examen">
+                    <div class="flip-card-btn flip-card-btn-front">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </div>
+                    <div class="descripcion descripcion-mesa">
+                        <p class="meta">
+                            01/07/2015 <br>
+                            16:00 Hs <br>
+                            Aula 33
+                        </p>
+                        <small class="docente-mesa">Diego Firmenich <br> Sebastián Schanz</small>
+                    </div>
+                    <div class="asistencias asistencias-offline">
+                        <span class="glyphicon glyphicon-map-marker"></span>
+                    </div>
+                </figure>
+            </div>
+        </div>
     </div>
     <div class="col-lg-7">
         <div class="mapa-container">
@@ -45,7 +122,21 @@
 {% endblock content %}
 {% block scripts %}
     <script src="http://maps.googleapis.com/maps/api/js"></script>
-    <script type="text/javascript" >
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var speed = 500;
+            $('.flip-card-btn-back').click(function () {
+                console.log("mostrando la parte de atras de: " + id );
+                var id = $(this).parent().parent()[0].id;
+                $('.card#'+id).toggleClass('flipped');
+            });
+            $('.flip-card-btn-front').click(function () {
+                var id = $(this).parent().parent()[0].id;
+                console.log("mostrando la parte de adelante de: " + id );
+                $('.card#'+id).toggleClass('flipped');
+            });
+        })
         function initialize() {
             var mapProp = {
                 center:new google.maps.LatLng(51.508742,-0.120850),
@@ -55,5 +146,6 @@
             var map=new google.maps.Map($('.mapa-container')[0],mapProp);
         }
         google.maps.event.addDomListener(window, 'load', initialize);
+
     </script>
 {% endblock scripts %}

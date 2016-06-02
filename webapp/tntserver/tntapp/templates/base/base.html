@@ -7,13 +7,14 @@
     <title>{% block title%}{% endblock title%}</title>
     <link rel="stylesheet" href="https://bootswatch.com/paper/bootstrap.min.css" charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" charset="utf-8">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
     {% block styles %}{% endblock styles %}
 </head>
 <body>
     <div class="container">
         <div class="row">
             {% include 'base/navbar.html' %}
-            <div class="col-lg-12 col-xs-12">
+            <div class="col-lg-12">
                 {% block content %}{% endblock content%}
             </div>
         </div>

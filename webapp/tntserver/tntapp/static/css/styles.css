@@ -7,7 +7,31 @@ body{
 .form-search-container{
     display: flex;
     justify-content: center;
-    align-items: center
+    align-items: center;
+    width: 100%
+}
+
+.form-search-container #search-term-input{
+    width: 88%;
+    display: inline-block;
+}
+
+.form-search-container #search-term-button{
+    margin-left: 10px;
+    position: relative;
+}
+
+@media (min-width: 768px) {
+    /* La lupa se ve un poco mas arriba de lo normal cuando no es un telefono*/
+    .form-search-container #search-term-button{
+        top: 5px;
+        padding-left: 5%;
+    }
+
+    .form-search-container .search-input{
+        padding:0;
+        width: 95%;
+    }
 }
 
 
@@ -20,4 +44,181 @@ body{
 .mapa-container{
     width: 100%;
     height: 400px;
+}
+
+
+/* Item Materia */
+.panel{
+    margin-bottom: 10px;
+}
+
+.card-container{
+    width: auto;
+    min-height: 120px;
+    position: relative;
+    perspective: 800px;
+    -webkit-perspective: 800px; /* Chrome, Safari, Opera */
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+}
+
+.card figure {
+  margin: 0;
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.card.flipped {
+  transform: rotateY( 180deg );
+}
+
+.materia-card{
+    padding: 0px;
+    display: flex;
+    align-items: center;
+    min-height: 120px;
+    /*justify-content: space-between;*/
+}
+
+.materia-front{
+    padding: 0px 10px 0px 10px;
+    display: flex;
+    justify-content: flex-start;
+    height: 110px;
+}
+.materia-front .descripcion{
+    line-height: 1.2;
+    width: 95%;
+    max-width: 95%;
+}
+
+.materia-front .flip-card-btn{
+    align-self: center;
+    font-size: 16px;
+    color: rgba(0,0,0, .3);
+}
+
+.asistencias{
+    text-align: center;
+    line-height: 1.1;
+    padding: 10px 10px;
+    color:white;
+    font-size: 36px;
+    margin-right: 10px;
+    width: 15%;
+    max-width: 15%;
+}
+.asistencias span{
+    font-size: 14px;
+}
+.asistencias-value{
+    margin: 0px;
+}
+
+.asistencias-online{
+    background-color: #4caf50;
+    color: rgba(0,0,0, .3);
+}
+
+.materia-offline .asistencias-offline span{
+    background-color: #ff9800;
+    color: rgba(0,0,0, .3);
+    font-size: 28px;
+    text-align: center;
+}
+
+.status-live{
+    background-color: #4caf50;;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.materia-back{
+    display: flex;
+    transform: rotateY( 180deg );
+}
+.materia-back.materia-online{
+    background-color: #4caf50;;
+    color:white;
+    line-height: 1.1;
+}
+
+.materia-back.materia-offline{
+    background-color: #ff9800;
+    color:white;
+}
+
+
+.materia-back .descripcion{
+    padding-top: 15px;
+    width: 75%;
+    max-width: 75%;
+    max-height: 100px;
+    text-align: center;
+    font-size: 16px;
+    color: rgba(0,0,0,.3);
+}
+
+
+.materia-back.materia-examen{
+    background-color: #2196f3;
+}
+
+.materia-back.materia-examen .descripcion-mesa{
+    color: rgba(255,255,255,.5);
+    font-weight: bold;
+}
+
+.materia-offline .asistencias-offline span{
+    background-color: transparent;
+    color: rgba(0,0,0, .3);
+    font-size: 28px;
+    text-align: center;
+}
+
+.materia-back.materia-examen .descripcion-mesa{
+    font-size: 14px;
+    padding: 0;
+    line-height: 1.3;
+}
+
+.materia-back.materia-examen .meta{
+    margin-bottom: 5px;
+}
+
+.materia-back.materia-examen .docente-mesa{
+    font-size: 12px;
+}
+
+.materia-back .flip-card-btn{
+    width: 15%;
+    max-width: 15%;
+    text-align: center;
+    font-size: 16px;
+    color: rgba(0,0,0, .3);
+}
+
+.materia-back .asistencias{
+    width: 10%;
+    max-width: 10%;
+    padding: 0px;
+}
+
+.subtitle{
+    font-size: 12px;
+    line-height: .9;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
