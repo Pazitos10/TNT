@@ -1,4 +1,4 @@
 *.pyc
 webapp/tntserver/db.sqlite3
 .gitignore
-*client_secret.json
+webapp/tntserver/tntserver/client_secret.json
