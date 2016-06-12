@@ -1,37 +1,66 @@
 @charset "UTF-8";
 body{
-    padding-top: 80px;
-    background-color: #FFFFFF
+    padding-top: 70px;
+    background-color: #FFFFFF;
+}
+
+.navbar-logo-dit{
+    display: flex;
+    align-items: flex-end;
+}
+.navbar-logo-dit img{
+    margin-right: 10px;
+}
+.navbar-logo-dit .brand-name{
+    font-weight: bold;  
+}
+
+.navbar-logo-dit:hover .brand-name{
+    text-shadow: 0px 0px 1px rgba(0,0,0,.3);
 }
 
 .form-search-container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%
+    display: block;
 }
 
 .form-search-container #search-term-input{
-    width: 80%;
+    width: 90%;
     display: inline-block;
 }
 
 .form-search-container #search-term-button{
-    margin-left: 10px;
+
     position: relative;
 }
 
 @media (min-width: 768px) {
     /* La lupa se ve un poco mas arriba de lo normal cuando no es un telefono*/
+    .card .descripcion p, 
+    .card .descripcion h6 {
+        font-size: 110%;
+    }
+    .card .descripcion label{
+        font-size: 100%;
+    }
+
+    .form-search-container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%
+    }
+
     .form-search-container #search-term-button{
         top: 5px;
-        padding-left: 5%;
+        margin-left: 10px;
+        /*padding-left: 5%;*/
     }
 
     .form-search-container .search-input{
         padding:0;
         width: 95%;
     }
+
 }
 
 
@@ -46,6 +75,32 @@ body{
     height: 400px;
 }
 
+.scroll-list{
+    max-height: 335px;
+    overflow-y: scroll;
+    padding: 2px 5px;
+    margin-bottom: 15px;
+}
+
+.scroll-list::-webkit-scrollbar { 
+    /*display: none; */
+    width: 2px!important;
+}
+.scroll-list::-webkit-scrollbar-thumb{
+    background-color: rgba(0,0,0,.2);
+}    
+.scroll-list::-webkit-scrollbar-track{
+    background-color: rgba(255,255,255,.08);
+}    
+
+
+#child-scoll{
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+}
+
 
 /* Item Materia */
 .panel{
@@ -54,7 +109,7 @@ body{
 
 .card-container{
     width: auto;
-    min-height: 120px;
+    min-height: 100px;
     position: relative;
     perspective: 800px;
     -webkit-perspective: 800px; /* Chrome, Safari, Opera */
@@ -77,6 +132,10 @@ body{
   backface-visibility: hidden;
 }
 
+.card .descripcion label{
+    font-size: 100%;
+}
+
 .card.flipped {
   transform: rotateY( 180deg );
 }
@@ -85,15 +144,16 @@ body{
     padding: 0px;
     display: flex;
     align-items: center;
-    min-height: 120px;
+    /*min-height: 120px;*/
     /*justify-content: space-between;*/
 }
 
 .materia-front{
-    padding: 0px 10px 0px 10px;
+    padding: 0px 10px 10px 10px;
     display: flex;
-    justify-content: flex-start;
-    height: 110px;
+    justify-content: center;
+    align-items: center;
+/*    height: 110px;*/
 }
 .materia-front .descripcion{
     line-height: 1.2;
@@ -102,9 +162,9 @@ body{
 }
 
 .materia-front .flip-card-btn{
-    align-self: center;
     font-size: 16px;
     color: rgba(0,0,0, .3);
+    padding-top: 10px;
 }
 
 .asistencias{
@@ -137,7 +197,7 @@ body{
 }
 
 .status-live{
-    background-color: #4caf50;;
+    background-color: #4caf50;
     width: 10px;
     height: 10px;
     display: inline-block;
@@ -148,9 +208,10 @@ body{
 .materia-back{
     display: flex;
     transform: rotateY( 180deg );
+    border-radius: 3px;
 }
 .materia-back.materia-online{
-    background-color: #4caf50;;
+    background-color: #4caf50;
     color:white;
     line-height: 1.1;
 }

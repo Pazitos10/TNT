@@ -59,7 +59,7 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
-def index(request):
+def calendarios(request):
     calendarios_data = fetch_calendarios()
     return render(request, "calendarios.html",
                 {'calendarios': calendarios_data})
@@ -97,6 +97,11 @@ class MateriaList(ListView):
     #para sobreescribir ubicacion y nombre de template por defecto
     def get_template_names(self):
             return ['tntapp/listado_materias.html']
+
+    def get_context_data(self, **kwargs):
+        context = super(MateriaList, self).get_context_data(**kwargs)
+        context['calendarios'] = fetch_calendarios()
+        return context
 
 class MateriaCreation(CreateView):
     model = Materia

@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
-
+{% load static %}
+{% load mytags %}
 {% block title%} TNT App {% endblock title%}
 
 {% block content%}
@@ -8,109 +9,52 @@
     <div class="col-lg-5" id="content-tabla">
         <div class="form-search-container">
             <div class="search-input navbar-form">
-                <input type="text" id="search-term-input" class="form-control search-input" placeholder="Buscar" name="search">
+                <input type="text" id="search-term-input" class="form-control search-input" placeholder="Ej: Elementos de Informática" name="search">
                 <span id="search-term-button" class="glyphicon glyphicon-search"></span>
             </div>
         </div>
-        <div class="panel card-container">
-            <div class="card" id="tnt-1">
-                <figure class="panel-body materia-card materia-front">
-                    <div class="descripcion">
-                        <h5> Taller de Nuevas Tecnologías </h5>
-                        <p class="text-muted subtitle">
-                            <strong> Apu/Lic. en sistemas - 5° - 1C </strong>
-                            <br><br>
-                        </p>
-                        <label class="label label-success">En Curso</label>
-                        <label class="label label-info">Práctica</label>
-                    </div>
-                    <div class="flip-card-btn flip-card-btn-back pull-right" data-id="tnt-1">
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                    </div>
-                </figure>
-                <figure class="panel-body materia-card materia-back materia-online">
-                    <div class="flip-card-btn flip-card-btn-front" data-id="tnt-1">
-                        <span class="glyphicon glyphicon-chevron-left"></span>
-                    </div>
-                    <div class="descripcion">
-                        <p>
-                            16 - 19Hs
-                            <span class="glyphicon glyphicon-time"></span>
-                        </p>
-                        <p>
-                            CC
-                            <span class="glyphicon glyphicon-map-marker"></span>
-                        </p>
-                    </div>
-                    <div class="asistencias asistencias-online">
-                        <p class="asistencias-value">7</p>
-                        <span class="glyphicon glyphicon-user"></span>
-                    </div>
-                </figure>
-            </div>
-        </div>
-
-        <div class="panel card-container">
-            <div class="card" id="tnt-2">
-                <figure class="panel-body materia-card materia-front">
-                    <div class="descripcion">
-                        <h5><strong> Taller de Nuevas Tecnologías </strong></h5>
-                        <p class="text-muted subtitle">
-                            <strong> Apu/Lic. en sistemas - 5° - 1C</strong>
-                        </p>
-                    </div>
-                    <div class="flip-card-btn flip-card-btn-back pull-right">
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                    </div>
-                </figure>
-                <figure class="panel-body materia-card materia-back materia-offline">
-                    <div class="flip-card-btn flip-card-btn-front">
-                        <span class="glyphicon glyphicon-chevron-left"></span>
-                    </div>
-                    <div class="descripcion">
-                        <p>
-                            L: 16 - 19 (T) <span class="glyphicon glyphicon-map-marker"></span><br>
-                            J: 17 - 20 (P) <span class="glyphicon glyphicon-map-marker"></span>
-                        </p>
-                    </div>
-                    <div class="asistencias asistencias-offline">
-                        <span class="glyphicon glyphicon-time"></span>
-                    </div>
-                </figure>
-            </div>
-        </div>
-
-        <div class="panel card-container">
-            <div class="card" id="tnt-3">
-                <figure class="panel-body materia-card materia-front">
-                    <div class="descripcion">
-                        <h5><strong> Taller de Nuevas Tecnologías </strong></h5>
-                        <p class="text-muted subtitle">
-                            <strong> Apu/Lic. en sistemas - 5° - 1C</strong> <br><br>
-                            <label class="label label-primary">Mesa Exámen</label>
-                        </p>
-                    </div>
-                    <div class="flip-card-btn flip-card-btn-back pull-right">
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                    </div>
-                </figure>
-                <figure class="panel-body materia-card materia-back materia-offline materia-examen">
-                    <div class="flip-card-btn flip-card-btn-front">
-                        <span class="glyphicon glyphicon-chevron-left"></span>
-                    </div>
-                    <div class="descripcion descripcion-mesa">
-                        <p class="meta">
-                            01/07/2015 <br>
-                            16:00 Hs <br>
-                            Aula 33
-                        </p>
-                        <small class="docente-mesa">Diego Firmenich <br> Sebastián Schanz</small>
-                    </div>
-                    <div class="asistencias asistencias-offline">
-                        <span class="glyphicon glyphicon-map-marker"></span>
-                    </div>
-                </figure>
-            </div>
+        <div class="scroll-list">
+            {% for cal, meta in calendarios %}
+                {% for materia, eventos in cal.iteritems %}
+                    {% for evento in eventos %}
+                        <input data-materia="{{materia}}" type="hidden" name="meta" value="{{meta|encode2json}}">
+                        <div class="panel card-container">
+                            <div class="card" data-materia="{{materia}}">
+                                <input id="{{materia}}" type="hidden" name="evento" value="{{evento|encode2json}}">
+                                <figure class="panel-body materia-card materia-front" data-materia="{{materia}}">
+                                    <div class="descripcion">
+                                        <h6 class="nombre-materia"> </h6>
+                                        <p class="text-muted subtitle meta"></p>
+                                        <div class="labels"></div>
+                                    </div>
+                                    <div class="flip-card-btn flip-card-btn-back pull-right" data-id="{{materia}}">
+                                        <span class="glyphicon glyphicon-chevron-right"></span>
+                                    </div>
+                                </figure>
+                                <figure class="panel-body materia-card materia-back materia-online" data-materia="{{materia}}">
+                                    <div class="flip-card-btn flip-card-btn-front" data-id="{{materia}}">
+                                        <span class="glyphicon glyphicon-chevron-left"></span>
+                                    </div>
+                                    <div class="descripcion">
+                                        <p>
+                                            16 - 19Hs
+                                            <span class="glyphicon glyphicon-time"></span>
+                                        </p>
+                                        <p>
+                                            CC
+                                            <span class="glyphicon glyphicon-map-marker"></span>
+                                        </p>
+                                    </div>
+                                    <div class="asistencias asistencias-online">
+                                        <p class="asistencias-value">7</p>
+                                        <span class="glyphicon glyphicon-user"></span>
+                                    </div>
+                                </figure>
+                            </div>
+                        </div>
+                        {% endfor %}
+                {% endfor %}
+            {% endfor %}
         </div>
     </div>
     <div class="col-lg-7">
@@ -123,29 +67,5 @@
 {% block scripts %}
     <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var speed = 500;
-            $('.flip-card-btn-back').click(function () {
-                console.log("mostrando la parte de atras de: " + id );
-                var id = $(this).parent().parent()[0].id;
-                $('.card#'+id).toggleClass('flipped');
-            });
-            $('.flip-card-btn-front').click(function () {
-                var id = $(this).parent().parent()[0].id;
-                console.log("mostrando la parte de adelante de: " + id );
-                $('.card#'+id).toggleClass('flipped');
-            });
-        })
-        function initialize() {
-            var mapProp = {
-                center:new google.maps.LatLng(51.508742,-0.120850),
-                zoom:5,
-                mapTypeId:google.maps.MapTypeId.ROADMAP
-            };
-            var map=new google.maps.Map($('.mapa-container')[0],mapProp);
-        }
-        google.maps.event.addDomListener(window, 'load', initialize);
-
-    </script>
+    <script type="text/javascript" src="{% static 'js/calendarios.js' %}"></script>
 {% endblock scripts %}
