@@ -8,6 +8,9 @@ class Materia(models.Model):
     nombre = models.CharField(max_length=50)
     id_calendario = models.IntegerField()
 
+    def __unicode__(self):
+        return self.nombre
+
 class Asistencia(models.Model):
     id_alumno = models.CharField(max_length=50)
     id_materia = models.ForeignKey(Materia, on_delete=models.CASCADE)

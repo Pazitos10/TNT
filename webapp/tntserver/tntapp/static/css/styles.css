@@ -12,7 +12,7 @@ body{
 }
 
 .form-search-container #search-term-input{
-    width: 88%;
+    width: 80%;
     display: inline-block;
 }
 

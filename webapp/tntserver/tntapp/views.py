@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse_lazy
@@ -7,17 +9,18 @@ from django.views.generic.edit import (
     UpdateView,
     DeleteView
 )
-from .models import Materia
-from django.core import serializers
-from .models import Asistencia
-import datetime
 from rest_framework import viewsets
-from .serializers import *
+import datetime
 
+from .serializers import *
+from .models import *
+from .utils import *
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    calendarios_data = fetch_calendarios()
+    return render(request, "calendarios.html",
+                {'calendarios': calendarios_data})
 
 class MateriaList(ListView):
     model = Materia
