@@ -17,9 +17,9 @@
             {% for cal, meta in calendarios %}
                 {% for materia, eventos in cal.iteritems %}
                     {% for evento in eventos %}
-                        <input data-materia="{{materia}}" type="hidden" name="meta" value="{{meta|encode2json}}">
                         <div class="panel card-container">
                             <div class="card" data-materia="{{materia}}">
+                                <input data-materia="{{materia}}" type="hidden" name="meta" value="{{meta|encode2json}}">
                                 <input id="{{materia}}" type="hidden" name="evento" value="{{evento|encode2json}}">
                                 <figure class="panel-body materia-card materia-front" data-materia="{{materia}}">
                                     <div class="descripcion">
@@ -65,6 +65,5 @@
 {% block scripts %}
     <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <script type="text/javascript" src="{% static 'js/calendarios.js' %}"></script>
-    <script src="{% static 'js/modals.js' %}"></script>
+    <script src="{% static 'js/calendarios.js' %}"></script>
 {% endblock scripts %}

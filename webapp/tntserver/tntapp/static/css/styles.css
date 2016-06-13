@@ -2,6 +2,7 @@
 body{
     padding-top: 70px;
     background-color: #FFFFFF;
+    font-family: "Roboto";
 }
 
 .navbar-logo-dit{
@@ -209,7 +210,6 @@ body{
 .materia-back.materia-online{
     background-color: #4caf50;
     color:white;
-    line-height: 1.1;
 }
 
 .materia-back.materia-offline{
@@ -219,11 +219,12 @@ body{
 
 
 .materia-back .descripcion{
-    padding-top: 15px;
+    padding-top: 10px;
     width: 75%;
     max-width: 75%;
     max-height: 100px;
     text-align: center;
+    align-self: center;
     font-size: 14px;
     color: rgba(0,0,0,.3);
 }
@@ -278,4 +279,19 @@ body{
     line-height: .9;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.titulo-tabla-modal{
+    font-size: 18px;
+    text-align: center;
+}
+
+.cuerpo-tabla-modal *{
+    margin:0;
+    text-transform: capitalize;
+    text-align: center;
+}
+
+.modal-body{
+    overflow: hidden;
 }

@@ -23,22 +23,21 @@ $(document).ready(function () {
         var card_parent = $(this).parent();
         var evento = JSON.parse($(this).val()); //obtenemos sus eventos
         // Armamos la vista
-        var titulo = evento.titulo;
-        var fecha_comienzo = new Date(evento.comienzo);
-        var fecha_fin = new Date(evento.fin);
+        var datos_evento = get_datos_evento(evento);
+        var etiquetas = '';
+        if(datos_evento['titulo'] === 'Mesa de Exámen')
+            etiquetas = '<br><label class="label label-primary">'+datos_evento['titulo']+'</label>';
+        else
+            etiquetas = '<br><label class="label label-info">'+datos_evento['titulo']+'</label>';
 
-        if(titulo === 'Mesa de Exámen'){
-            card_parent.find('.labels').append('<br><label class="label label-primary">'+titulo+'</label>');
-        }else{
-            card_parent.find('.labels').append('<br><label class="label label-info">'+titulo+'</label>');
-        }
-        if(evento_en_curso(fecha_comienzo, evento.se_repite)){
-            card_parent.find('.labels').append('<label class="label label-success" style="margin-left:5px">En curso<label>')
-        }
-        
+        if(datos_evento['en_curso'])
+            etiquetas += '<label class="label label-success" style="margin-left:5px">En curso<label>';
+
+        card_parent.find('.labels').append(etiquetas);
         //llenamos la parte de atras
         set_description_back(card_parent, evento);
     });
+
 
     function get_datos_evento (evento) {
         var fecha_comienzo = new Date(evento.comienzo);
@@ -54,6 +53,7 @@ $(document).ready(function () {
             dia: get_dia(fecha_comienzo),
             hora_inicio: get_hora(fecha_comienzo),
             hora_fin: get_hora(fecha_fin),
+            se_repite : evento.se_repite,
             en_curso : evento_en_curso(fecha_comienzo, evento.se_repite),
             fecha_dma : get_fecha(fecha_comienzo),
             aula : aula,
@@ -89,7 +89,7 @@ $(document).ready(function () {
     *   la fecha/hora actual.
     */
     function evento_en_curso(fecha_evento, es_evento_recurrente){
-        var fecha_actual = new Date(); //to test -> '6/13/2016 16:00'
+        var fecha_actual = new Date('6/13/2016 16:00'); //to test -> '6/13/2016 16:00'
         if (es_evento_recurrente){
             if (fecha_evento.getDay() === fecha_actual.getDay()) //Dia de la semana -> l, m, x...
                 return en_curso_ahora(fecha_evento, fecha_actual);
@@ -120,10 +120,10 @@ $(document).ready(function () {
                                             datos['lugar'] +' '+ datos['aula'] +'</p>'+
                                         '</div>'+
                                         '<div class="asistencias asistencias-offline">'+
-                                            '<span class="glyphicon glyphicon-info-sign info-mesa" data-materia="'+materia+'"></span>'+
+                                            '<span class="glyphicon glyphicon-info-sign info-mesa" data-toggle="modal" data-target="#modal-info-mesa">'+
+                                            '</span>'+
                                         '</div>';
             figure_parent.removeClass('materia-online').addClass('materia-offline materia-examen');
-            figure_parent.append(markup_descripcion_back);
         }else{
             markup_descripcion_back =   '<div class="descripcion descripcion-back">'+
                                             '<p>'+datos['dia']+'<br>'+datos['hora_inicio']+' - '+datos['hora_fin']+'<br>'+ 
@@ -140,9 +140,8 @@ $(document).ready(function () {
                                             '</div>';
                 figure_parent.removeClass('materia-online').addClass('materia-offline');
             }
-            figure_parent.append(markup_descripcion_back);
         }
-        //descripcion_back.append(markup_descripcion_back);
+        figure_parent.append(markup_descripcion_back);
     }
 
     // Manejo de botones en item materia
@@ -150,16 +149,39 @@ $(document).ready(function () {
         var card = $(this).parent().parent()[0];
         $(card).toggleClass('flipped');
     });
+
+    $('#modal-info-mesa').on('show.bs.modal', function(e) {
+        var card_parent = $(e.relatedTarget).parents().get(2); //obtenemos el elemento card relacionado
+        var materia = $(card_parent).data('materia');
+        var meta = JSON.parse($(card_parent).find('input[name=meta]').val());
+        var nombre_materia = meta[materia].split(/:|\n/)[1];
+        var evento = $(card_parent).find('input[name=evento]')[0];
+        var datos = get_datos_evento(JSON.parse($(evento).val()));
+        var titulo_modal = $(this).find('.modal-title')[0];
+        var cuerpo_modal = $(this).find('.modal-body')[0];
+        var lista_profesores = datos['profesores'].split(';');
+        $(titulo_modal).addClass('text-center');
+        titulo_modal.innerHTML = datos['titulo'];
+        var tabla = '<div class="col-lg-8 col-lg-offset-2">'+
+                    '<h6 class="text-center">'+ nombre_materia +'</h6>'+
+                    '<table class="table table-striped">'+
+                        '<thead><tr><th class="titulo-tabla-modal">Profesores</th></tr></thead>'+
+                        '<tbody class="cuerpo-tabla-modal">';
+        $.each(lista_profesores, function(i){
+            tabla += '<tr><td><p>'+ lista_profesores[i].toLowerCase() +'</p></td></tr>';
+        });
+        tabla += '</tbody></table></div>';
+        cuerpo_modal.innerHTML = tabla;
+        console.log(cuerpo_modal);
+    });
+    
+    function initialize() {
+        var mapProp = {
+            center:new google.maps.LatLng(-43.2493016,-65.3076351),
+            zoom:13,
+            mapTypeId:google.maps.MapTypeId.ROADMAP
+        };
+        var map=new google.maps.Map($('.mapa-container')[0],mapProp);
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
 })
-
-function initialize() {
-    var mapProp = {
-        center:new google.maps.LatLng(-43.2493016,-65.3076351),
-        zoom:13,
-        mapTypeId:google.maps.MapTypeId.ROADMAP
-    };
-    var map=new google.maps.Map($('.mapa-container')[0],mapProp);
-}
-google.maps.event.addDomListener(window, 'load', initialize);
-
-'<label class="label label-success">En Curso</label><label class="label label-info">Práctica</label>'
