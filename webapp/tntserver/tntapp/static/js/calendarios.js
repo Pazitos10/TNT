@@ -40,6 +40,30 @@ $(document).ready(function () {
         set_description_back(card_parent, evento);
     });
 
+    function get_datos_evento (evento) {
+        var fecha_comienzo = new Date(evento.comienzo);
+        var fecha_fin = new Date(evento.fin);
+        var descripcion = evento.descrip.split('\n'); 
+        var aula = '('+descripcion[0]+')';
+        var lugar = descripcion[1].split(':')[1];
+        var profesores = descripcion[2].split(':')[1];
+        var datos = {
+            titulo : evento.titulo,
+            fecha_comienzo : fecha_comienzo,
+            fecha_fin : fecha_fin,
+            dia: get_dia(fecha_comienzo),
+            hora_inicio: get_hora(fecha_comienzo),
+            hora_fin: get_hora(fecha_fin),
+            en_curso : evento_en_curso(fecha_comienzo, evento.se_repite),
+            fecha_dma : get_fecha(fecha_comienzo),
+            aula : aula,
+            lugar: lugar,
+            profesores: profesores
+        }
+        return datos;
+    }
+
+
     function get_hora(fecha){
         var hora = fecha.getHours();
         var mins = fecha.getMinutes();
@@ -60,25 +84,12 @@ $(document).ready(function () {
         return dias[fecha_completa.getDay() - 1 ];
     }
 
-    function get_direccion(descripcion_evento, con_profesores) {
-        //Separados por coma: aula, lugar, profesores
-        var datos = descripcion_evento.split('\n');
-        var aula = datos[0];
-        var lugar = datos[1].split(':')[1];
-        var profesores = datos[2].split(':')[1];
-        var salida = lugar+'<br> ('+aula+') ';
-        if (con_profesores){
-            return salida +'con:'+profesores;
-        }else
-            return salida;
-    }
-
     /**
     *   Retorna true si la fecha y hora del evento indicado es igual a 
     *   la fecha/hora actual.
     */
     function evento_en_curso(fecha_evento, es_evento_recurrente){
-        var fecha_actual = new Date();
+        var fecha_actual = new Date(); //to test -> '6/13/2016 16:00'
         if (es_evento_recurrente){
             if (fecha_evento.getDay() === fecha_actual.getDay()) //Dia de la semana -> l, m, x...
                 return en_curso_ahora(fecha_evento, fecha_actual);
@@ -100,18 +111,13 @@ $(document).ready(function () {
     function set_description_back(card, evento) {
         var figure_parent = card.find('figure.materia-back');
         var materia = card.data('materia');
-        var titulo = evento.titulo;
-        var fecha_comienzo = new Date(evento.comienzo);
-        var fecha_fin = new Date(evento.fin);
-        var en_curso = evento_en_curso(fecha_comienzo, evento.se_repite);
-        var fecha_dma = get_fecha(fecha_comienzo);
-        var tiempo_hm = get_hora(fecha_comienzo); 
-        var aula = get_direccion(evento.descrip, false);
+        var datos = get_datos_evento(evento);
 
         var markup_descripcion_back = '';
-        if (titulo === 'Mesa de Exámen'){
+        if (datos['titulo'] === 'Mesa de Exámen'){
             markup_descripcion_back =   '<div class="descripcion descripcion-back">'+
-                                            '<p class="meta">'+fecha_dma+'-'+tiempo_hm+'<br> '+ aula +'</p>'+
+                                            '<p class="meta">'+datos['fecha_dma']+' - '+datos['hora_inicio']+'<br> '+ 
+                                            datos['lugar'] +' '+ datos['aula'] +'</p>'+
                                         '</div>'+
                                         '<div class="asistencias asistencias-offline">'+
                                             '<span class="glyphicon glyphicon-info-sign info-mesa" data-materia="'+materia+'"></span>'+
@@ -120,9 +126,10 @@ $(document).ready(function () {
             figure_parent.append(markup_descripcion_back);
         }else{
             markup_descripcion_back =   '<div class="descripcion descripcion-back">'+
-                                            '<p>'+get_dia(fecha_comienzo)+'<br>'+get_hora(fecha_comienzo)+' - '+get_hora(fecha_fin)+'<br>'+ aula +'</p>'+
+                                            '<p>'+datos['dia']+'<br>'+datos['hora_inicio']+' - '+datos['hora_fin']+'<br>'+ 
+                                            datos['lugar'] +' '+ datos['aula'] +'</p>'+
                                         '</div>';
-            if (en_curso){
+            if (datos['en_curso']){
                 markup_descripcion_back +=  '<div class="asistencias asistencias-online">'+
                                                 '<p class="asistencias-value">7</p>'+
                                                 '<span class="glyphicon glyphicon-user"></span>'+
