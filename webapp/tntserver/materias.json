@@ -1,0 +1,258 @@
+[
+  {
+    "anio" : 1,
+    "cuatrimestre" : 1,
+    "id_calendario" : "aod40c9ls454d9jqsh7oetc910@group.calendar.google.com",
+    "nombre" : "Elementos de informática",
+    "descripcion" : "IF001 - Elementos de informática",
+    "codigo" : "IF001"
+  },
+  {
+    "anio" : 1,
+    "cuatrimestre" : 1,
+    "id_calendario" : "5cv4ur5p3enrbvjlt875us5qes@group.calendar.google.com",
+    "nombre" : "Algebra",
+    "descripcion" : "MA045 - Algebra",
+    "codigo" : "MA045"
+  },
+  {
+    "anio" : 1,
+    "cuatrimestre" : 1,
+    "id_calendario" : "jrjdur8jrdkktb4b87ctfh9nt4@group.calendar.google.com",
+    "nombre" : "Expresión de Problemas y algoritmos",
+    "descripcion" : "IF002 - Expresión de Problemas y algoritmos",
+    "codigo" : "IF002"
+  },
+  {
+    "anio" : 1,
+    "cuatrimestre" : 2,
+    "id_calendario" : "no563qhav0opleeksuljh2igvk@group.calendar.google.com",
+    "nombre" : "Algorítmica y Programación I",
+    "descripcion" : "IF003 - Algorítmica y Programación I",
+    "codigo" : "IF003"
+  },
+  {
+    "anio" : 1,
+    "cuatrimestre" : 2,
+    "id_calendario" : "nnib87ebfm3jc3rf4q4vl6hvas@group.calendar.google.com",
+    "nombre" : "Análisis Matemático - S",
+    "descripcion" : "MA048 - Análisis Matemático - S",
+    "codigo" : "MA048"
+  },
+  {
+    "anio" : 1,
+    "cuatrimestre" : 2,
+    "id_calendario" : "ulejanbq8o0vu0051uikgcrcts@group.calendar.google.com",
+    "nombre" : "Elementos de Lógica y Matemática Discreta",
+    "descripcion" : "MA008 - Elementos de Lógica y Matemática Discreta",
+    "codigo" : "MA008"
+  },
+  {
+    "anio" : 2,
+    "cuatrimestre" : 1,
+    "id_calendario" : "u435g4290uurj04akttvu8oe8o@group.calendar.google.com",
+    "nombre" : "Sistemas y Organizaciones",
+    "descripcion" : "IF004 - Sistemas y Organizaciones",
+    "codigo" : "IF004"
+  },
+  {
+    "anio" : 2,
+    "cuatrimestre" : 1,
+    "id_calendario" : "0vv9158nrqj66m8382hu665p4c@group.calendar.google.com",
+    "nombre" : "Arquitectura de Computadoras",
+    "descripcion" : "IF005 - Arquitectura de Computadoras",
+    "codigo" : "IF005"
+  },
+  {
+    "anio" : 2,
+    "cuatrimestre" : 1,
+    "id_calendario" : "oigrphjfmk8dbhble3ed7m897s@group.calendar.google.com",
+    "nombre" : "Algorítmica y Programación II",
+    "descripcion" : "IF006 - Algorítmica y Programación II",
+    "codigo" : "IF006"
+  },
+  {
+    "anio" : 2,
+    "cuatrimestre" : 2,
+    "id_calendario" : "qf0f4fj3skov4kbm3nr3fnujkg@group.calendar.google.com",
+    "nombre" : "Bases de Datos I",
+    "descripcion" : "IF007 - Bases de Datos I",
+    "codigo" : "IF007"
+  },
+  {
+    "anio" : 2,
+    "cuatrimestre" : 2,
+    "id_calendario" : "5sq3en190kr31qv66c0n7592s8@group.calendar.google.com",
+    "nombre" : "Estadística",
+    "descripcion" : "MA006 - Estadística",
+    "codigo" : "MA006"
+  },
+  {
+    "anio" : 2,
+    "cuatrimestre" : 2,
+    "id_calendario" : "d3v1k1v4lkme3b6bo8id57ksso@group.calendar.google.com",
+    "nombre" : "Programación Orientada a Objetos",
+    "descripcion" : "IF008 - Programación Orientada a Objetos",
+    "codigo" : "IF008"
+  },
+  {
+    "anio" : 2,
+    "cuatrimestre" : 2,
+    "id_calendario" : "m3j2o5j14v3r58oh8do9tupt6c@group.calendar.google.com",
+    "nombre" : "Introducción a la Concurrencia",
+    "descripcion" : "IF038 - Introducción a la Concurrencia",
+    "codigo" : "IF038"
+  },
+  {
+    "anio" : 3,
+    "cuatrimestre" : 1,
+    "id_calendario" : "44n2egpv8jtf50gklttqtrb3b0@group.calendar.google.com",
+    "nombre" : "Laboratorio de Programación y Lenguajes ",
+    "descripcion" : "IF009 - Laboratorio de Programación y Lenguajes ",
+    "codigo" : "IF009"
+  },
+  {
+    "anio" : 3,
+    "cuatrimestre" : 1,
+    "id_calendario" : "oifnjkdoarm4ccc1rqpej3fr20@group.calendar.google.com",
+    "nombre" : "Ingeniería de Software I - T ",
+    "descripcion" : "IF040 - Ingeniería de Software I - T ",
+    "codigo" : "IF040"
+  },
+  {
+    "anio" : 3,
+    "cuatrimestre" : 1,
+    "id_calendario" : "ct35ivinohqe7hjos7v53h8chg@group.calendar.google.com",
+    "nombre" : "Sistemas Operativos - S ",
+    "descripcion" : "IF037 - Sistemas Operativos - S ",
+    "codigo" : "IF037"
+  },
+  {
+    "anio" : 3,
+    "cuatrimestre" : 2,
+    "id_calendario" : "li7nr9tu7ckfrvb0ssqpcqjko0@group.calendar.google.com",
+    "nombre" : "Desarrollo de Software",
+    "descripcion" : "IF012 - Desarrollo de Software",
+    "codigo" : "IF012"
+  },
+  {
+    "anio" : 3,
+    "cuatrimestre" : 2,
+    "id_calendario" : "sb12dshqfp74gvb5ku3fq74csk@group.calendar.google.com",
+    "nombre" : "Fundamentos Teóricos de Informática",
+    "descripcion" : "IF013 - Fundamentos Teóricos de Informática",
+    "codigo" : "IF013"
+  },
+  {
+    "anio" : 3,
+    "cuatrimestre" : 2,
+    "id_calendario" : "k8dpu029kq3be4vobh1bh0trv8@group.calendar.google.com",
+    "nombre" : "Ingeniería de Software II - T ",
+    "descripcion" : "IF043 - Ingeniería de Software II - T ",
+    "codigo" : "IF043"
+  },
+  {
+    "anio" : 4,
+    "cuatrimestre" : 1,
+    "id_calendario" : "479kq0gffslu7jivobkgpu9aj4@group.calendar.google.com",
+    "nombre" : "Redes y Transmisión de Datos",
+    "descripcion" : "IF019 - Redes y Transmisión de Datos",
+    "codigo" : "IF019"
+  },
+  {
+    "anio" : 4,
+    "cuatrimestre" : 1,
+    "id_calendario" : "5nff8m8hobmj2ujls74059cdk4@group.calendar.google.com",
+    "nombre" : "Base de Datos II - S",
+    "descripcion" : "IF044 - Base de Datos II - S",
+    "codigo" : "IF044"
+  },
+  {
+    "anio" : 4,
+    "cuatrimestre" : 1,
+    "id_calendario" : "91rftv0gds25df85t7khasju00@group.calendar.google.com",
+    "nombre" : "Paradigmas y Lenguajes de Programación - T",
+    "descripcion" : "IF020 - Paradigmas y Lenguajes de Programación - T",
+    "codigo" : "IF020"
+  },
+  {
+    "anio" : 4,
+    "cuatrimestre" : 2,
+    "id_calendario" : "5vuope2lv20ecaphvtco546m80@group.calendar.google.com",
+    "nombre" : "Administración de Redes y Seguridad",
+    "descripcion" : "IF046 - Administración de Redes y Seguridad",
+    "codigo" : "IF046"
+  },
+  {
+    "anio" : 4,
+    "cuatrimestre" : 2,
+    "id_calendario" : "9cfuban51c8egirdi9s4c2rqgs@group.calendar.google.com",
+    "nombre" : "Ingeniería de Software III - T ",
+    "descripcion" : "IF047 - Ingeniería de Software III - T ",
+    "codigo" : "IF047"
+  },
+  {
+    "anio" : 4,
+    "cuatrimestre" : 2,
+    "id_calendario" : "gmqdq5ebs0qk64f9ho5vm4rg1o@group.calendar.google.com",
+    "nombre" : "Aspectos Legales y Profesionales",
+    "descripcion" : "IF016 - Aspectos Legales y Profesionales",
+    "codigo" : "IF016"
+  },
+  {
+    "anio" : 4,
+    "cuatrimestre" : 2,
+    "id_calendario" : "f333raq619gkck7296ef6j61lg@group.calendar.google.com",
+    "nombre" : "Sistemas Distribuidos",
+    "descripcion" : "IF022 - Sistemas Distribuidos",
+    "codigo" : "IF022"
+  },
+  {
+    "anio" : 5,
+    "cuatrimestre" : 1,
+    "id_calendario" : "1lkt8vhajum08gptuvol23ru9g@group.calendar.google.com",
+    "nombre" : "Administración de Proyectos",
+    "descripcion" : "IF049 - Administración de Proyectos",
+    "codigo" : "IF049"
+  },
+  {
+    "anio" : 5,
+    "cuatrimestre" : 1,
+    "id_calendario" : "desntamfq0aevjn09lmv98dvrc@group.calendar.google.com",
+    "nombre" : "Aplicaciones Web",
+    "descripcion" : "IF050 - Aplicaciones Web",
+    "codigo" : "IF050"
+  },
+  {
+    "anio" : 5,
+    "cuatrimestre" : 1,
+    "id_calendario" : "alibc0t7lt2fphpl0pgl270ago@group.calendar.google.com",
+    "nombre" : "Taller de Nuevas Tecnologias",
+    "descripcion" : "IF017 - Taller de Nuevas Tecnologias",
+    "codigo" : "IF017"
+  },
+  {
+    "anio" : 5,
+    "cuatrimestre" : 1,
+    "id_calendario" : "eh20c0mot7q95ijetu7rhp3rr4@group.calendar.google.com",
+    "nombre" : "Modelos y Simulación",
+    "descripcion" : "IF027 - Modelos y Simulación",
+    "codigo" : "IF027"
+  },
+  {
+    "anio" : 5,
+    "cuatrimestre" : 2,
+    "id_calendario" : "rq64o17me91gd3bnh21hebo0ho@group.calendar.google.com",
+    "nombre" : "Planificación y Gestión de Sistemas de Información ",
+    "descripcion" : "IF053 - Planificación y Gestión de Sistemas de Información ",
+    "codigo" : "IF053"
+  },
+  {
+    "anio" : 5,
+    "cuatrimestre" : 2,
+    "id_calendario" : "fdaci27fn9ip704k1rtb32cuq0@group.calendar.google.com",
+    "nombre" : "Sistemas de Soporte para la Toma de Decisiones ",
+    "descripcion" : "IF054 - Sistemas de Soporte para la Toma de Decisiones ",
+    "codigo" : "IF054"
+  }
+]

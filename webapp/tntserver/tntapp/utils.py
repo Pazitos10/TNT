@@ -58,3 +58,20 @@ def fetch_calendarios():
         delta = fin_lectura - inicio_lectura
         print "[%s] fin lectura: %s - Delta: %s\n" % (str(fin_lectura), ics_url , str(delta))
     return zip(calendarios_events, calendarios_data)
+
+
+def materias_json_to_sqlite():
+    print 'Entro'
+    materias = json.load(open('../materias.json'))
+    db = sqlite3.connect("fluxos.sqlite")
+
+    columns = ['anio', 'cuatrimestre', 'id_calendario', 'nombre', 'descripcion', 'codigo']
+    for materia in materias:
+        for nombre_campo, data in materia.iteritems():
+            c.execute("insert into medicoes values (?,?,?,?,?,?,?)", keys)
+            print nombre_campo
+            print data
+
+
+if __name__=='__main__':
+    materias_json_to_sqlite()

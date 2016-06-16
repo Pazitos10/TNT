@@ -3,10 +3,12 @@ from __future__ import unicode_literals
 from django.db import models
 
 class Materia(models.Model):
-    anio_de_cursado = models.IntegerField(default=1) #materia de primer anio u otro
-    lugar_de_dictado = models.CharField(max_length=50)
+    codigo = models.CharField(max_length=5, null=True)
+    anio = models.IntegerField(default=1) #materia de primer anio u otro
+    cuatrimestre = models.IntegerField(default=1) #materia de primer anio u otro
     nombre = models.CharField(max_length=50)
-    id_calendario = models.IntegerField()
+    descripcion = models.CharField(max_length=100, null=True)
+    id_calendario = models.CharField(max_length=100)
 
     def __unicode__(self):
         return self.nombre
