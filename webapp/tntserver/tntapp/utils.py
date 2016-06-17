@@ -1,4 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import json
+import sqlite3
 import urllib2
 import datetime
 from icalendar import Calendar, Event, vDatetime
@@ -61,16 +64,18 @@ def fetch_calendarios():
 
 
 def materias_json_to_sqlite():
-    print 'Entro'
     materias = json.load(open('../materias.json'))
-    db = sqlite3.connect("fluxos.sqlite")
-
-    columns = ['anio', 'cuatrimestre', 'id_calendario', 'nombre', 'descripcion', 'codigo']
+    db = sqlite3.connect("../db.sqlite3")
+    columnas = map(lambda nombre: str(nombre), materias[0].keys())
+    str_col = "(" + ",".join(columnas) + ")"
+    query = 'insert into tntapp_materia '+ str_col + ' values (?,?,?,?,?,?)'
     for materia in materias:
-        for nombre_campo, data in materia.iteritems():
-            c.execute("insert into medicoes values (?,?,?,?,?,?,?)", keys)
-            print nombre_campo
-            print data
+        c = db.cursor()
+        c.execute(query, materia.values())
+        c.execute("select * from tntapp_materia")
+        print c.fetchall()
+        db.commit()
+        c.close()
 
 
 if __name__=='__main__':

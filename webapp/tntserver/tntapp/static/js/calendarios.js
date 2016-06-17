@@ -30,8 +30,10 @@ $(document).ready(function () {
         else
             etiquetas = '<br><label class="label label-info">'+datos_evento['titulo']+'</label>';
 
-        if(datos_evento['en_curso'])
+        if(datos_evento['en_curso']){
+            console.log('hola');
             etiquetas += '<label class="label label-success" style="margin-left:5px">En curso<label>';
+        }
 
         card_parent.find('.labels').append(etiquetas);
         //llenamos la parte de atras
@@ -89,9 +91,10 @@ $(document).ready(function () {
     *   la fecha/hora actual.
     */
     function evento_en_curso(fecha_evento, es_evento_recurrente){
-        var fecha_actual = new Date('6/13/2016 16:00'); //to test -> '6/13/2016 16:00'
+        var fecha_actual = new Date(); //to test -> '6/13/2016 16:00'
         if (es_evento_recurrente){
             if (fecha_evento.getDay() === fecha_actual.getDay()) //Dia de la semana -> l, m, x...
+                console.log('es el mismo dia');
                 return en_curso_ahora(fecha_evento, fecha_actual);
         }else{
             if (fecha_evento.getDate() === fecha_actual.getDate()) //Dia del mes -> 1...30
@@ -102,8 +105,9 @@ $(document).ready(function () {
 
     function en_curso_ahora(fecha_evento, fecha_actual){
         //para probar lo siguiente, usar: new Date('mm/dd/aaaa hh:MM') en evento_en_curso
-        if(get_hora(fecha_evento) === get_hora(fecha_actual))
+        if(fecha_evento.getHours() === fecha_actual.getHours())
             return true;
+            //si la hora es mayor o igual que la fecha de inicio y menor o igual que la fecha de fin (duracion)
         else
             return false;
     }

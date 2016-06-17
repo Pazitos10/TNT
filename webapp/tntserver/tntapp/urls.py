@@ -16,6 +16,6 @@ urlpatterns = [
     url(r'^mapa$', verMapa, name='mapa'),
     url(r'^api/', include(router.urls)),
     url(r'^calendarios/$', calendarios, name='calendarios'),
+    #url(r'^api/asis', asistenciaAPI, name='asistenciaAPI')
     #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-
 ]
