@@ -33,11 +33,39 @@ Para compartir un calendario con un profesor, siga los siguientes pasos:
 4. El profesor recibirá en su casilla de correo electrónico un aviso de que se ha compartido un calendario con él y apartir de ahí ya podrá administrar el calendario correspondiente a su materia o bien ingresando a la página web de [Google Calendar](http://calendar.google.com) o bien, desde su dispositivo móvil, configurando su cuenta de [GMail](http://mail.google.com).
 ![](https://k60.kn3.net/B/7/5/5/7/B/C48.
 
+### Gestionar un Calendario
+La aplicación desarrollada basará su funcionamiento en la consulta de los eventos creados en cada uno de los calendarios de las materiar. Para ello será de suma importancia la creación de eventos, siguiendo unas simples reclas. Los eventos serán principalmente de 2 tipos: *Clases* y *Examenes*
+
+#### Creación de Evento de tipo Clase
+El evento de tipo clase se corresponderá con el dictado de clases en un cuatrimestre. La siguiente guía utilizar un navegador web, anque hay que seguir prácticamente los mismos paoss para realizarlo desde un dispositivo móvil. Para crear el evento de tipo clase, siga los siguientes pasos:
+
+1. Ingresar en Calendar](http://calendar.google.com)y sitúese en el Calendario correspondiente ![](https://k61.kn3.net/5/9/F/A/D/9/F22.png)
+2. Haga clic en el Botón *Crear*
+3. Se abrirá una ventana donde ingresará los datos de la clase:
+	* Como nombre del evento ponga el nombre de la materia y opcionalmente si es una clase de Teoría o Práctica (recuerde que los alumnos idealmente estarán cursando varias materias). Por ejemplo, *Taller de Nuevas Tecnologías (TyP)*.
+	* Como Fecha ingrese la fecha de la primera clase correspondiente al cutrimestre *14/3/2016* corresponde a la primera clase del primer cuatrimestre de 2016 (día martes).
+	* Ingrese horario de inicio y de finalización de la clase.
+	* Seleccione la opción de *Repetir* para indicar que el evento Clase se repite todas las semanas. Se abrirá una ventana como la siguiente:
+	![](https://k61.kn3.net/2/8/8/7/F/7/7BA.png)
+	* En este caso hemos puesto que la clase se repite todos los días Martes.
+	* Ingrese la fecha de Finalización del Cuatrimestre como fecha de finalización de la Repetición
+	* En Descripción del evento ingrese toda la metainformación que desee de la manera *{etiqueta: valor}* de cursado de la siguiente manera:
+		* **lugar: XXXX** (donde XXXX será **CC** o **aulas**). Este dato es opcional.
+		*  **aula: YY** (YY donde YY será el Nº de aula). Este dato es opcional.
+	![](https://k61.kn3.net/0/0/7/6/7/1/50D.png)
+	**Importante:**  La utilización de la etiqueta **lugar** con valores **CC** o **aulas** hará que el evento pueda visualizarse en un punto del mapa, ya que estos valores fijos estarán asociadas a las coordenadas del lugar. Puede utilizar cuantas etiquetas desee, una por línea de la Descripción del Evento
+	
+### Creación de Evento de tipo Mesa de Examen
+Los examenes serán cargados todos en un Calendario aparte. Para agregar un aviso de examen, póngase en contacto con el administrador del [DIT](http://www.dit.ing.unp.edu.ar).
+Los pasos a seguir son básicamente los mismos que los de un evento de tipo *Clase*, salvo que no cargará repetición. En a descripción del evento también puede utilizar las etiquetas **lugar: XXXX**, **aula: YY** o todas las etiquetas personalizadas que deseee
+
+
 ## Listado de Materias
 A Junio de 2016, el listado de materias correspondiente a la carrera de [Licenciatura en Sistemas (Or. Planificación, Gestión y Control de Proyectos Informáticos](http://www.ing.unp.edu.ar/info_lic_informatica_2010_c.htm) con sus correspondientes **ID del Calendario** es el siguiente:
 
 | Código | Asignatura                                          | anio | Cuatrimestre | Nombre Calendario                                           | ID del Calendario                                |
 |--------|-----------------------------------------------------|-----|--------------|-------------------------------------------------------------|------------------------------------------------------| 
+| EXAME  | Mesas de Exámenes                            	   |     |              | EXAME - Mesas de Exámenes									  | nubkn5itvfi3n25bpv0mkgps84@group.calendar.google.com |
 | IF001  | Elementos de informática                            | 1   | 1            | IF001 - Elementos de informática                            | aod40c9ls454d9jqsh7oetc910@group.calendar.google.com | 
 | MA045  | Algebra                                             | 1   | 1            | MA045 - Algebra                                             | 5cv4ur5p3enrbvjlt875us5qes@group.calendar.google.com | 
 | IF002  | Expresión de Problemas y algoritmos                 | 1   | 1            | IF002 - Expresión de Problemas y algoritmos                 | jrjdur8jrdkktb4b87ctfh9nt4@group.calendar.google.com | 
@@ -70,26 +98,3 @@ A Junio de 2016, el listado de materias correspondiente a la carrera de [Licenci
 | IF027  | Modelos y Simulación                                | 5   | 1            | IF027 - Modelos y Simulación                                | eh20c0mot7q95ijetu7rhp3rr4@group.calendar.google.com | 
 | IF053  | Planificación y Gestión de Sistemas de Información  | 5   | 2            | IF053 - Planificación y Gestión de Sistemas de Información  | rq64o17me91gd3bnh21hebo0ho@group.calendar.google.com | 
 | IF054  | Sistemas de Soporte para la Toma de Decisiones      | 5   | 2            | IF054 - Sistemas de Soporte para la Toma de Decisiones      | fdaci27fn9ip704k1rtb32cuq0@group.calendar.google.com | 
-
-
-
-
-Armar documentación para profesores
-
-Crear calendario para mesas de exámenes: Eventos de tipo "Mesa de Exámen"
-Aula: a designar o Nº
-Lugar: CC/Edificio Aulas (texto cualquira - harcodear para asociar con lat/long)
-Profesor: lista separadas por ;
-
-tiene que tener seteado Mostrar como: Disponible
-
-
-Evetnos: tipos "Clase Teórica" o "Clase Práctica" 
-
-materia:
-carrera:
-anio:
-cuatrimestre:
-
-
-Horario/Fecha/Repetir todas las semanas-> Finalizar al final del cuatrimestre
