@@ -13,7 +13,7 @@ body{
     margin-right: 10px;
 }
 .navbar-logo-dit .brand-name{
-    font-weight: bold;  
+    font-weight: bold;
 }
 
 .navbar-logo-dit:hover .brand-name{
@@ -36,7 +36,7 @@ body{
 
 @media (min-width: 768px) {
     /* La lupa se ve un poco mas arriba de lo normal cuando no es un telefono*/
-    .card .descripcion p, 
+    .card .descripcion p,
     .card .descripcion h6 {
         font-size: 110%;
     }
@@ -83,13 +83,13 @@ body{
     margin-bottom: 15px;
 }
 
-.scroll-list::-webkit-scrollbar { 
+.scroll-list::-webkit-scrollbar {
     /*display: none; */
     width: 2px!important;
 }
 .scroll-list::-webkit-scrollbar-thumb{
     background-color: rgba(0,0,0,.2);
-}    
+}
 .scroll-list::-webkit-scrollbar-track{
     background-color: rgba(255,255,255,.08);
 }
@@ -125,7 +125,7 @@ body{
   backface-visibility: hidden;
 }
 
-.card .descripcion p, 
+.card .descripcion p,
 .card .descripcion h6 {
     font-size: 110%;
 }
@@ -162,6 +162,10 @@ body{
     font-size: 16px;
     color: rgba(0,0,0, .3);
     padding-top: 10px;
+}
+
+.en-curso{
+  margin-left:5px;
 }
 
 .asistencias{

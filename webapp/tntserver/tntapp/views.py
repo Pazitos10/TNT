@@ -60,7 +60,7 @@ def get_credentials():
     return credentials
 
 def calendarios(request):
-    calendarios_data = fetch_calendarios()
+    calendarios_data = fetch_calendarios.delay(Materia.get_calendars_url())
     return render(request, "calendarios.html",
                 {'calendarios': calendarios_data})
 
@@ -100,7 +100,7 @@ class MateriaList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(MateriaList, self).get_context_data(**kwargs)
-        context['calendarios'] = fetch_calendarios()
+        context['calendarios'] = fetch_calendarios(Materia.get_calendars_url())
         return context
 
 class MateriaCreation(CreateView):

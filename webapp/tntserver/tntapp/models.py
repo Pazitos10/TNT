@@ -13,6 +13,13 @@ class Materia(models.Model):
     def __unicode__(self):
         return self.nombre
 
+    @classmethod
+    def get_calendars_url(self):
+        urls = {}
+        for materia in Materia.objects.all():
+            urls.update({materia.codigo: materia.id_calendario})
+        return urls
+
 class Asistencia(models.Model):
     id_alumno = models.CharField(max_length=50)
     id_materia = models.ForeignKey(Materia, on_delete=models.CASCADE, related_name='materias')

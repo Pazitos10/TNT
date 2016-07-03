@@ -5,6 +5,11 @@ import sqlite3
 import urllib2
 import datetime
 from icalendar import Calendar, Event, vDatetime
+import threading
+import Queue
+
+calendarios_data = []
+calendarios_events = []
 
 def get_simple_events(eventos):
     """
@@ -35,32 +40,37 @@ def get_simple_events(eventos):
         event_list.append(simple_event)
     return event_list
 
-def fetch_calendarios():
-    CHARSET = 'UTF-8'
-    base_url = "https://calendar.google.com/calendar/ical/{}@group.calendar.google.com/public/basic.ics"
-    # ics_urls = {
-    #     "RTxDatos"  : "db46rsturhg72kaon3bkjtp638",
-    #     "TNT"       : "q4sjke29116cd0ld3275p9ch9g"
-    #     "AyP-II"    : "nubkn5itvfi3n25bpv0mkgps84",
-    #     "AyG"       : "h2hpa8j9ndn3kinjqvchtkgr64"
-    # }
-    ics_urls = {"TNT": "1dgvl4utp25atd5s3nj9dfkbn8", "AW": "4rlbiggjp3u4k2cr1bvcsk5mi4"} #calendars -> bruno
+def fetch_calendarios(ics_urls):
+    global calendarios_data, calendarios_events
     calendarios_data = []
     calendarios_events = []
-    for materia, ics_url in ics_urls.iteritems():
-        inicio_lectura = datetime.datetime.now()
-        print "[%s] inicio lectura: %s\n" % (str(inicio_lectura), ics_url)
-        ics_file = urllib2.urlopen(base_url.format(ics_url))
-        gcal = Calendar.from_ical(unicode(ics_file.read(), CHARSET))
-        meta = gcal.walk('vcalendar')[0]['X-WR-CALDESC']
-        events = get_simple_events([e for e in gcal.walk('vevent')])
-        calendarios_events.append({materia: events})
-        calendarios_data.append({materia: meta})
-        ics_file.close()
-        fin_lectura = datetime.datetime.now()
-        delta = fin_lectura - inicio_lectura
-        print "[%s] fin lectura: %s - Delta: %s\n" % (str(fin_lectura), ics_url , str(delta))
-    return zip(calendarios_events, calendarios_data)
+    fetch_parallel(ics_urls)
+    result = zip(calendarios_events, calendarios_data)
+    print result
+    print "From calendar.google"
+    #corregir el modo de apendear a las listas
+    return result
+
+
+def parse_data(ics_url, materia, queue):
+    global calendarios_data, calendarios_events
+    CHARSET = 'UTF-8'
+    base_url = "https://calendar.google.com/calendar/ical/{}/public/basic.ics"
+    #ics_urls = {"TNT": "1dgvl4utp25atd5s3nj9dfkbn8", "AW": "4rlbiggjp3u4k2cr1bvcsk5mi4"} #calendars -> bruno
+    #inicio_lectura = datetime.datetime.now()
+    #print "[%s] inicio lectura: %s\n" % (str(inicio_lectura), ics_url)
+    ics_file = urllib2.urlopen(base_url.format(ics_url))
+    gcal = Calendar.from_ical(unicode(ics_file.read(), CHARSET))
+    meta = gcal.walk('vcalendar')[0]['X-WR-CALDESC']
+    events = get_simple_events([e for e in gcal.walk('vevent')])
+    calendarios_events.append({materia: events})
+    calendarios_data.append({materia: meta})
+    #fin_lectura = datetime.datetime.now()
+    ics_file.close()
+    #delta = fin_lectura - inicio_lectura
+    #print "[%s] fin lectura: %s - Delta: %s\n" % (str(fin_lectura), ics_url , str(delta))
+
+    #queue.put(zip(calendarios_events, calendarios_data))
 
 
 def materias_json_to_sqlite():
@@ -77,6 +87,25 @@ def materias_json_to_sqlite():
         db.commit()
         c.close()
 
+def fetch_parallel(urls):
+    result = Queue.Queue()
+    threads = [threading.Thread(target=parse_data, args = (url, materia, result)) for materia, url in urls.iteritems()]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    return result
 
-if __name__=='__main__':
-    materias_json_to_sqlite()
+def queue_get_all(q):
+    items = []
+    maxItemsToRetreive = 10
+    for numOfItemsRetrieved in range(0, maxItemsToRetreive):
+        try:
+            if numOfItemsRetrieved == maxItemsToRetreive:
+                break
+            items.append(q.get_nowait())
+        except Empty, e:
+            break
+    return items
+#if __name__=='__main__':
+    #materias_json_to_sqlite()

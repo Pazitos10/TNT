@@ -9,12 +9,12 @@ $(document).ready(function () {
         var cuatrimestre = Number(meta[materia].split(/:|\n/)[5]);
         if (cuatrimestre === 1)
             cuatrimestre += '<sup>er</sup>';
-        else 
+        else
             cuatrimestre += '<sup>do</sup>';
-        $.each($('.card[data-materia='+materia+']'), function() {
+        /*$.each($('.card[data-materia='+materia+']'), function() {
             $(this).find('.nombre-materia')[0].innerHTML = nombre_materia;
             $(this).find('.meta')[0].innerHTML = anio + '° Año - ' + cuatrimestre + ' cuatrimestre';
-        });
+        });*/
     });
 
 
@@ -24,17 +24,21 @@ $(document).ready(function () {
         var evento = JSON.parse($(this).val()); //obtenemos sus eventos
         // Armamos la vista
         var datos_evento = get_datos_evento(evento);
+        var titulo = datos_evento['titulo'];
         var etiquetas = '';
-        if(datos_evento['titulo'] === 'Mesa de Exámen')
-            etiquetas = '<br><label class="label label-primary">'+datos_evento['titulo']+'</label>';
-        else
-            etiquetas = '<br><label class="label label-info">'+datos_evento['titulo']+'</label>';
+        var tipo_clase = '';
+        if(titulo.includes('(P)'))
+          tipo_clase = 'Clase Práctica';
+        if(titulo.includes('(T)'))
+            tipo_clase = 'Clase Teórica';
+        if(titulo.includes('(TyP)'))
+            tipo_clase = 'Teoría y Práctica';
+        etiquetas = '<br><label class="label label-info">'+tipo_clase+'</label>';
 
-        if(datos_evento['en_curso']){
-            console.log('hola');
-            etiquetas += '<label class="label label-success" style="margin-left:5px">En curso<label>';
-        }
+        if(datos_evento['en_curso'])
+            etiquetas += '<label class="label label-success en-curso">En curso<label>';
 
+        card_parent.find('.nombre-materia').append(titulo);
         card_parent.find('.labels').append(etiquetas);
         //llenamos la parte de atras
         set_description_back(card_parent, evento);
@@ -42,12 +46,15 @@ $(document).ready(function () {
 
 
     function get_datos_evento (evento) {
+        console.log(evento);
         var fecha_comienzo = new Date(evento.comienzo);
         var fecha_fin = new Date(evento.fin);
-        var descripcion = evento.descrip.split('\n'); 
-        var aula = '('+descripcion[0]+')';
-        var lugar = descripcion[1].split(':')[1];
-        var profesores = descripcion[2].split(':')[1];
+        var descripcion = evento.descrip.split('\n');
+        if (descripcion.length > 2) {
+          var aula = '('+descripcion[0]+')';
+          var lugar = descripcion[1].split(':')[1] || "" ;
+          var profesores = descripcion[2].split(':')[1] || "";
+        }
         var datos = {
             titulo : evento.titulo,
             fecha_comienzo : fecha_comienzo,
@@ -58,9 +65,9 @@ $(document).ready(function () {
             se_repite : evento.se_repite,
             en_curso : evento_en_curso(fecha_comienzo, evento.se_repite),
             fecha_dma : get_fecha(fecha_comienzo),
-            aula : aula,
-            lugar: lugar,
-            profesores: profesores
+            aula : aula || "",
+            lugar: lugar || "",
+            profesores: profesores || ""
         }
         return datos;
     }
@@ -87,15 +94,16 @@ $(document).ready(function () {
     }
 
     /**
-    *   Retorna true si la fecha y hora del evento indicado es igual a 
+    *   Retorna true si la fecha y hora del evento indicado es igual a
     *   la fecha/hora actual.
     */
     function evento_en_curso(fecha_evento, es_evento_recurrente){
         var fecha_actual = new Date(); //to test -> '6/13/2016 16:00'
         if (es_evento_recurrente){
-            if (fecha_evento.getDay() === fecha_actual.getDay()) //Dia de la semana -> l, m, x...
-                console.log('es el mismo dia');
+            if (fecha_evento.getDay() === fecha_actual.getDay()){
+                console.log('es el mismo dia'); //Dia de la semana -> l, m, x...
                 return en_curso_ahora(fecha_evento, fecha_actual);
+            }
         }else{
             if (fecha_evento.getDate() === fecha_actual.getDate()) //Dia del mes -> 1...30
                 return en_curso_ahora(fecha_evento, fecha_actual);
@@ -120,7 +128,7 @@ $(document).ready(function () {
         var markup_descripcion_back = '';
         if (datos['titulo'] === 'Mesa de Exámen'){
             markup_descripcion_back =   '<div class="descripcion descripcion-back">'+
-                                            '<p class="meta">'+datos['fecha_dma']+' - '+datos['hora_inicio']+'<br> '+ 
+                                            '<p class="meta">'+datos['fecha_dma']+' - '+datos['hora_inicio']+'<br> '+
                                             datos['lugar'] +' '+ datos['aula'] +'</p>'+
                                         '</div>'+
                                         '<div class="asistencias asistencias-offline">'+
@@ -130,7 +138,7 @@ $(document).ready(function () {
             figure_parent.removeClass('materia-online').addClass('materia-offline materia-examen');
         }else{
             markup_descripcion_back =   '<div class="descripcion descripcion-back">'+
-                                            '<p>'+datos['dia']+'<br>'+datos['hora_inicio']+' - '+datos['hora_fin']+'<br>'+ 
+                                            '<p>'+datos['dia']+'<br>'+datos['hora_inicio']+' - '+datos['hora_fin']+'<br>'+
                                             datos['lugar'] +' '+ datos['aula'] +'</p>'+
                                         '</div>';
             if (datos['en_curso']){
@@ -178,7 +186,7 @@ $(document).ready(function () {
         cuerpo_modal.innerHTML = tabla;
         console.log(cuerpo_modal);
     });
-    
+
     function initialize() {
         var mapProp = {
             center:new google.maps.LatLng(-43.2493016,-65.3076351),
