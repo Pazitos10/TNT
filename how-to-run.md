@@ -46,6 +46,14 @@ En entornos de desarrollo, se utilizará el comando runserver como sigue:
 
 Donde carpeta_de_proyecto es equivalente al directorio en el cual puede visualizarse el archivo manage.py
 
+Si es la primera vez que ejecuta el servidor, lo mejor es aplicar las migraciones para tener la última versión de la base de datos.
+
+    (ditenv)$ python manage.py migrate
+
+Luego, ejecutamos el servidor:
+
+    (ditenv)$ python manage.py runserver
+
 #### Paso 4: Ejecutar Celery
 
 Utilizando otra terminal, situarse en el mismo directorio que en el paso 3 y ejecutar:
