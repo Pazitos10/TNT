@@ -1,9 +1,5 @@
 $(document).ready(function () {
 
-    $.each($('input[name=meta]'), function () {
-        set_description_front(this);
-    });
-
     $.each($('input[name=evento]'), function() {
         process_event_data(this);
     });
@@ -59,21 +55,6 @@ $(document).ready(function () {
         if(en_curso)
             labels += '<label class="label label-success en-curso">En curso<label>';
         return labels;
-    }
-
-    //completamos la parte delantera de cada item materia
-    function set_description_front(target) {
-        var materia = $(target).data('materia'); //obtenemos el id materia
-        var meta = JSON.parse($(target).val());
-        var nombre_materia = meta[materia].nombre;
-        var anio = meta[materia].anio;
-        var cuatrimestre = Number(meta[materia].cuatrimestre);
-        cuatrimestre += (cuatrimestre === 1) ? '<sup>er</sup>' : '<sup>do</sup>';
-        $.each($('.card[data-materia='+materia+']'), function() {
-            $(this).find('.nombre-materia')[0].innerHTML = nombre_materia;
-            var meta = anio + '° Año - ' + cuatrimestre + ' cuatrimestre';
-            $(this).find('.meta')[0].innerHTML = meta;
-        });
     }
 
     /*

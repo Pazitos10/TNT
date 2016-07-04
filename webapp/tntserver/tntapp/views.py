@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 #Google Calendar
@@ -26,6 +25,7 @@ from rest_framework import viewsets
 from .serializers import *
 from .models import *
 from .utils import *
+from .tasks import fetch_async
 
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
@@ -60,15 +60,15 @@ def get_credentials():
     return credentials
 
 def calendarios(request):
-    calendarios_data = fetch_calendarios.delay(Materia.get_calendars_url())
-    return render(request, "calendarios.html",
-                {'calendarios': calendarios_data})
+    #actualiza asincronicamente los calendarios
+    fetch_calendarios(Materia.get_calendars_url())
+    materias = Materia.objects.all()
+    return render(request, "calendarios.html",{'materias': materias})
 
 def sincronizarConCalendario(request):
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
-
     calendarios = service.calendarList().list().execute()
     calendarios = calendarios.values()
     for c in calendarios:
@@ -100,7 +100,8 @@ class MateriaList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(MateriaList, self).get_context_data(**kwargs)
-        context['calendarios'] = fetch_calendarios(Materia.get_calendars_url())
+        fetch_async.apply_async((Materia.get_calendars_url(),), countdown=20)
+        context['materias'] = Materia.objects.all()
         return context
 
 class MateriaCreation(CreateView):

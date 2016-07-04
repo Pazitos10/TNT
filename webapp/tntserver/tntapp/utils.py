@@ -4,73 +4,58 @@ import json
 import sqlite3
 import urllib2
 import datetime
-from icalendar import Calendar, Event, vDatetime
 import threading
-import Queue
-from models import Materia
+from icalendar import Calendar
+from models import Materia, EventoMateria
 
-calendarios_data = []
-calendarios_events = []
 BASE_ICS_URL = "https://calendar.google.com/calendar/ical/{}/public/basic.ics"
+events_id = []
 
-def get_simple_events(eventos):
+def update_events(eventos, materia_id):
     """
-        Retorna una lista de eventos, donde cada uno de ellos
-        contiene al menos los siguientes datos:
-            comienzo: dia/hora de inicio del evento
-            fin: dia/hora de fin del evento
-            direccion: ubicacion geografica del evento
-            resumen: titulo del evento
-            descripcion: los datos necesarios para confeccionar la info de
-                las materias. A saber:
-                    Aula: '(numero de aula | msg: "a designar")'
-                    Lugar: '(CC|Edificio Aulas)'
-                    Profesor: listado con el formato
-                                Apellido, nombres[; Apellido Nombres ...]
+        Verifica si los eventos de una materia fueron modificados en
+        google calendar y actualiza la informacion local.
     """
-    event_list = []
+    global events_id
     for event in eventos:
-        #print event
-        simple_event = {
-            'comienzo'  : str(event['DTSTART'].dt),
-            'fin'       : str(event['DTEND'].dt),
-            'direccion' : unicode(event['LOCATION']),
-            'titulo'    : unicode(event['SUMMARY']),
-            'descrip'   : unicode(event['DESCRIPTION']),
-            'se_repite' : True if event.has_key('RRULE') else False
-        }
-        event_list.append(simple_event)
-    return event_list
+        events_id.append(str(event['UID']))
+        defaults = {'comienzo' : event['DTSTART'].dt,
+                    'fin'       : event['DTEND'].dt,
+                    'direccion' : unicode(event['LOCATION']),
+                    'titulo'    : unicode(event['SUMMARY']),
+                    'descrip'   : unicode(event['DESCRIPTION']),
+                    'se_repite' : True if event.has_key('RRULE') else False,
+                    'ts_last_modified': event['LAST-MODIFIED'].dt,
+                    'materia_id': materia_id }
 
-def get_meta(materia):
-    meta = {
-        'nombre': materia.nombre,
-        'cuatrimestre': materia.cuatrimestre,
-        'anio': materia.anio
-    }
-    return meta
+        ev_materia, created = EventoMateria.objects.get_or_create(
+            id_evento = str(event['UID']),
+            defaults  = defaults
+        )
+        if ev_materia:
+            if event['LAST-MODIFIED'].dt > ev_materia.ts_last_modified:
+                ev_materia.update(defaults)
+                print "Evento " + str(event['UID']) +" materia: "+ materia_id +" fue modificado!"
+        else:
+            print "Evento " + str(event['UID']) +" materia: "+ materia_id +" creado!"
 
-def fetch_calendarios(ics_urls):
-    global calendarios_data, calendarios_events
-    calendarios_data = []
-    calendarios_events = []
-    fetch_parallel(ics_urls)
-    result = zip(calendarios_events, calendarios_data)
-    #corregir el modo de apendear a las listas
-    return result
+def fetch_calendarios(urls):
+    global events_id
+    events_id = []
+    threads = [threading.Thread(target=parse_data, args = (url, materia_id)) for materia_id, url in urls.iteritems()]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    EventoMateria.cleanup(events_id)
 
-
-def parse_data(ics_url, materia, queue):
-    global calendarios_data, calendarios_events
+def parse_data(ics_url, materia):
     ics_file = urllib2.urlopen(BASE_ICS_URL.format(ics_url))
     gcal = Calendar.from_ical(unicode(ics_file.read(), 'UTF-8'))
-    materia_obj = Materia.objects.filter(codigo=materia).first()
-    meta = get_meta(materia_obj) #gcal.walk('vcalendar')[0]['X-WR-CALDESC']
-    events = get_simple_events([e for e in gcal.walk('vevent')])
-    calendarios_events.append({materia: events})
-    calendarios_data.append({materia: meta})
+    eventos = [e for e in gcal.walk('vevent')]
+    if len(eventos) > 0:
+        events_id = update_events(eventos, materia)
     ics_file.close()
-
 
 def feed_db():
     materias = json.load(open('../materias.json'))
@@ -85,12 +70,3 @@ def feed_db():
         print c.fetchall()
         db.commit()
         c.close()
-
-def fetch_parallel(urls):
-    result = Queue.Queue()
-    threads = [threading.Thread(target=parse_data, args = (url, materia, result)) for materia, url in urls.iteritems()]
-    for t in threads:
-        t.start()
-    for t in threads:
-        t.join()
-    return result

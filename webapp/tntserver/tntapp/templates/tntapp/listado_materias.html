@@ -1,6 +1,5 @@
 {% extends "base/base.html" %}
 {% load static %}
-{% load mytags %}
 {% block title%} TNT App {% endblock title%}
 
 {% block content%}
@@ -14,33 +13,7 @@
             </div>
         </div>
         <div class="scroll-list">
-            {% for cal, meta in calendarios %}
-                {% for materia, eventos in cal.iteritems %}
-                    {% for evento in eventos %}
-                        <div class="panel card-container">
-                            <div class="card" data-materia="{{materia}}">
-                                <input data-materia="{{materia}}" type="hidden" name="meta" value="{{meta|encode2json}}">
-                                <input data-materia="{{materia}}" type="hidden" name="evento" value="{{evento|encode2json}}">
-                                <figure class="panel-body materia-card materia-front" data-materia="{{materia}}">
-                                    <div class="descripcion">
-                                        <h6 class="nombre-materia"> </h6>
-                                        <p class="text-muted subtitle meta"></p>
-                                        <div class="labels"></div>
-                                    </div>
-                                    <div class="flip-card-btn flip-card-btn-back pull-right" data-id="{{materia}}">
-                                        <span class="glyphicon glyphicon-chevron-right"></span>
-                                    </div>
-                                </figure>
-                                <figure class="panel-body materia-card materia-back materia-online" data-materia="{{materia}}">
-                                    <div class="flip-card-btn flip-card-btn-front" data-id="{{materia}}">
-                                        <span class="glyphicon glyphicon-chevron-left"></span>
-                                    </div>
-                                </figure>
-                            </div>
-                        </div>
-                        {% endfor %}
-                {% endfor %}
-            {% endfor %}
+            {% include 'tntapp/scroll-list-content.html' with materias=materias %}
         </div>
     </div>
     <div class="col-lg-7">
