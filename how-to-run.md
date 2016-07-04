@@ -17,7 +17,7 @@ Luego:
     $ mkvirtualenv --python='python2' <nombre_entorno>
     $ workon ditenv
 
-### Paso 2: Instalar las dependencias
+#### Paso 2: Instalar las dependencias
 
 **Para Python**: Las dependencias se encuentran en el archivo requirements.txt, ubicado en la raíz de este repositorio. Para instalarlas procedemos a utilizar pip como sigue:
 
@@ -29,7 +29,7 @@ Luego:
 
     $ sudo apt-get install rabbitmq-server
 
-### Paso 3: Correr el servidor
+#### Paso 3: Correr el servidor
 
 En entornos de desarrollo, se utilizará el comando runserver como sigue:
 
@@ -46,7 +46,7 @@ En entornos de desarrollo, se utilizará el comando runserver como sigue:
 
 Donde carpeta_de_proyecto es equivalente al directorio en el cual puede visualizarse el archivo manage.py
 
-### Paso 4: Ejecutar Celery
+#### Paso 4: Ejecutar Celery
 
 Utilizando otra terminal, situarse en el mismo directorio que en el paso 3 y ejecutar:
 
@@ -80,7 +80,7 @@ Si se deseara eliminar a todos los workers sin esperar a que terminen sus tareas
 
     ps auxww | grep 'celery worker' | awk '{print $2}' | xargs kill -9
 
-### Paso 5: Utilizar la aplicación normalmente
+#### Paso 5: Utilizar la aplicación normalmente
 
 Celery corre una tarea que se encargará de verificar que los datos locales son consistentes con los datos de Google Calendar, y en caso contrario, actualiza los datos locales. Dado que dicha tarea es asincrónica no detiene el funcionamiento normal de la aplicación.
 
