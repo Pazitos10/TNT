@@ -1,60 +1,88 @@
 $(document).ready(function () {
 
-    //completamos la parte delantera de cada item materia
     $.each($('input[name=meta]'), function () {
-        var materia = $(this).data('materia'); //obtenemos el id materia
-        var meta = JSON.parse($(this).val());
-        var nombre_materia = meta[materia].split(/:|\n/)[1];
-        var anio = meta[materia].split(/:|\n/)[3];
-        var cuatrimestre = Number(meta[materia].split(/:|\n/)[5]);
-        if (cuatrimestre === 1)
-            cuatrimestre += '<sup>er</sup>';
-        else
-            cuatrimestre += '<sup>do</sup>';
-        /*$.each($('.card[data-materia='+materia+']'), function() {
-            $(this).find('.nombre-materia')[0].innerHTML = nombre_materia;
-            $(this).find('.meta')[0].innerHTML = anio + '° Año - ' + cuatrimestre + ' cuatrimestre';
-        });*/
+        set_description_front(this);
     });
-
 
     $.each($('input[name=evento]'), function() {
-        var materia = $(this).data('materia'); //obtenemos el id materia
-        var card_parent = $(this).parent();
-        var evento = JSON.parse($(this).val()); //obtenemos sus eventos
-        // Armamos la vista
-        var datos_evento = get_datos_evento(evento);
-        var titulo = datos_evento['titulo'];
-        var etiquetas = '';
-        var tipo_clase = '';
-        if(titulo.includes('(P)'))
-          tipo_clase = 'Clase Práctica';
-        if(titulo.includes('(T)'))
-            tipo_clase = 'Clase Teórica';
-        if(titulo.includes('(TyP)'))
-            tipo_clase = 'Teoría y Práctica';
-        etiquetas = '<br><label class="label label-info">'+tipo_clase+'</label>';
-
-        if(datos_evento['en_curso'])
-            etiquetas += '<label class="label label-success en-curso">En curso<label>';
-
-        card_parent.find('.nombre-materia').append(titulo);
-        card_parent.find('.labels').append(etiquetas);
-        //llenamos la parte de atras
-        set_description_back(card_parent, evento);
+        process_event_data(this);
     });
 
+    // Manejo de botones en item materia
+    $('.flip-card-btn-back, .flip-card-btn-front').click(function () {
+        var card = $(this).parent().parent()[0];
+        $(card).toggleClass('flipped');
+    });
 
+    // Dispara el modal
+    $('#modal-info-mesa').on('show.bs.modal', function(e) {
+        set_modal_data(e, this);
+    });
+
+    //Inicializa el mapa en pantalla
+    function initialize() {
+        var mapProp = {
+            center:new google.maps.LatLng(-43.2493016,-65.3076351),
+            zoom:13,
+            mapTypeId:google.maps.MapTypeId.ROADMAP
+        };
+        var map=new google.maps.Map($('.mapa-container')[0],mapProp);
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+    /**
+    *   Coloca el nombre de la materia que toma mesa de examen
+    *   como metadata del item materia de la interfaz.
+    */
+    function set_materia_mesa(card, materia_mesa) {
+        card.find('.meta')[0].innerHTML = materia_mesa;
+    }
+
+    function process_event_data(target) {
+        var card_parent = $(target).parent();
+        var evento = JSON.parse($(target).val()); //obtenemos sus eventos
+        var datos_evento = get_datos_evento(evento);
+        if (datos_evento.materia.length > 0)
+            set_materia_mesa(card_parent, datos_evento.materia);
+        var labels = get_labels_front(datos_evento.titulo, datos_evento.en_curso);
+        card_parent.find('.labels').append(labels);
+        set_description_back(card_parent, evento);
+    }
+
+    /*
+    *   Retorna un string con el markup para los labels de un item materia.
+    */
+    function get_labels_front(titulo, en_curso) {
+        var labels = '<br><label class="label label-warning">'+titulo+'</label>';
+        if (titulo === 'Exámen Final')
+            labels = '<br><label class="label label-primary">'+titulo+'</label>';
+        if(en_curso)
+            labels += '<label class="label label-success en-curso">En curso<label>';
+        return labels;
+    }
+
+    //completamos la parte delantera de cada item materia
+    function set_description_front(target) {
+        var materia = $(target).data('materia'); //obtenemos el id materia
+        var meta = JSON.parse($(target).val());
+        var nombre_materia = meta[materia].nombre;
+        var anio = meta[materia].anio;
+        var cuatrimestre = Number(meta[materia].cuatrimestre);
+        cuatrimestre += (cuatrimestre === 1) ? '<sup>er</sup>' : '<sup>do</sup>';
+        $.each($('.card[data-materia='+materia+']'), function() {
+            $(this).find('.nombre-materia')[0].innerHTML = nombre_materia;
+            var meta = anio + '° Año - ' + cuatrimestre + ' cuatrimestre';
+            $(this).find('.meta')[0].innerHTML = meta;
+        });
+    }
+
+    /*
+    *   Retorna un objeto json con los datos del evento recibido como parametro
+    */
     function get_datos_evento (evento) {
-        console.log(evento);
         var fecha_comienzo = new Date(evento.comienzo);
         var fecha_fin = new Date(evento.fin);
-        var descripcion = evento.descrip.split('\n');
-        if (descripcion.length > 2) {
-          var aula = '('+descripcion[0]+')';
-          var lugar = descripcion[1].split(':')[1] || "" ;
-          var profesores = descripcion[2].split(':')[1] || "";
-        }
+        var descripcion = evento.descrip;
         var datos = {
             titulo : evento.titulo,
             fecha_comienzo : fecha_comienzo,
@@ -63,16 +91,29 @@ $(document).ready(function () {
             hora_inicio: get_hora(fecha_comienzo),
             hora_fin: get_hora(fecha_fin),
             se_repite : evento.se_repite,
-            en_curso : evento_en_curso(fecha_comienzo, evento.se_repite),
-            fecha_dma : get_fecha(fecha_comienzo),
-            aula : aula || "",
-            lugar: lugar || "",
-            profesores: profesores || ""
+            en_curso : evento_en_curso(fecha_comienzo, fecha_fin, evento.se_repite),
+            fecha_dma : get_fecha(fecha_comienzo)
+        }
+        var terminos = ['aula','lugar', 'profesores', 'materia'];
+        var value = '';
+        for (var i=0; i < terminos.length; i++){
+            value = '';
+            if (descripcion.includes(terminos[i])){
+                value = descripcion.split(terminos[i]+':')[1];
+                value = value.split('\n')[0];
+                if (terminos[i] === 'aula')
+                    value = '(aula: '+value+')';
+                if (terminos[i] === 'profesores')
+                    value = value.substr(0, 35)+'...';
+            }
+            datos[terminos[i]] = value;
         }
         return datos;
     }
 
-
+    /*
+    *   Retorna un string con la hora en formato hh:mm
+    */
     function get_hora(fecha){
         var hora = fecha.getHours();
         var mins = fecha.getMinutes();
@@ -80,6 +121,9 @@ $(document).ready(function () {
         return hora + ":" + mins + "hs";
     }
 
+    /*
+    *   Retorna un string con la fecha en formato dd/mm/aaaa
+    */
     function get_fecha(fecha){
         var dia = fecha.getDate();
         var mes = fecha.getMonth()+1;
@@ -87,6 +131,10 @@ $(document).ready(function () {
         return dia + '/' + mes + '/' + anio;
     }
 
+    /**
+    *   Retorna el nombre del día correspondiente a el numero de
+    *   día de la fecha recibida. P. ej: 4/7/2016 -> Lunes
+    */
     function get_dia(fecha_completa) {
         var dias = ['Lunes', 'Martes', 'Miércoles',
                 'Jueves', 'Viernes','Sábado', 'Domingo'];
@@ -97,39 +145,43 @@ $(document).ready(function () {
     *   Retorna true si la fecha y hora del evento indicado es igual a
     *   la fecha/hora actual.
     */
-    function evento_en_curso(fecha_evento, es_evento_recurrente){
+    function evento_en_curso(f_comienzo_evento, f_fin_evento, es_evento_recurrente){
         var fecha_actual = new Date(); //to test -> '6/13/2016 16:00'
         if (es_evento_recurrente){
-            if (fecha_evento.getDay() === fecha_actual.getDay()){
-                console.log('es el mismo dia'); //Dia de la semana -> l, m, x...
-                return en_curso_ahora(fecha_evento, fecha_actual);
+            if (f_comienzo_evento.getDay() === fecha_actual.getDay()){
+                return en_curso_ahora(f_comienzo_evento, f_fin_evento, fecha_actual);
             }
         }else{
-            if (fecha_evento.getDate() === fecha_actual.getDate()) //Dia del mes -> 1...30
-                return en_curso_ahora(fecha_evento, fecha_actual);
+            //Dia del mes -> 1...30
+            if (f_comienzo_evento.getDate() === fecha_actual.getDate())
+                return en_curso_ahora(f_comienzo_evento, f_fin_evento, fecha_actual);
         }
         return false;
     }
 
-    function en_curso_ahora(fecha_evento, fecha_actual){
-        //para probar lo siguiente, usar: new Date('mm/dd/aaaa hh:MM') en evento_en_curso
-        if(fecha_evento.getHours() === fecha_actual.getHours())
+    /**
+    *   Retorna true si el evento se encuentra en curso en el momento de
+    *   invocacion a esta funcion, caso contrario, retorna false.
+    */
+    function en_curso_ahora(f_inicio_evento, f_fin_evento, fecha_actual){
+        //to test -> new Date('mm/dd/aaaa hh:MM') en evento_en_curso()
+        if(Date.parse(fecha_actual) >= Date.parse(f_inicio_evento) &&
+            Date.parse(fecha_actual) <= Date.parse(f_fin_evento))
             return true;
-            //si la hora es mayor o igual que la fecha de inicio y menor o igual que la fecha de fin (duracion)
         else
             return false;
     }
 
+    //completamos la parte trasera de cada item materia
     function set_description_back(card, evento) {
         var figure_parent = card.find('figure.materia-back');
         var materia = card.data('materia');
         var datos = get_datos_evento(evento);
-
         var markup_descripcion_back = '';
-        if (datos['titulo'] === 'Mesa de Exámen'){
+        if (datos['titulo'] === 'Exámen Final'){
             markup_descripcion_back =   '<div class="descripcion descripcion-back">'+
-                                            '<p class="meta">'+datos['fecha_dma']+' - '+datos['hora_inicio']+'<br> '+
-                                            datos['lugar'] +' '+ datos['aula'] +'</p>'+
+                                            '<p class="meta">'+datos['fecha_dma'] +' - '+datos['hora_inicio']+'<br> '+
+                                            datos['lugar'] +' '+ datos['aula'] +'<br>'+ datos['profesores']+'</p>'+
                                         '</div>'+
                                         '<div class="asistencias asistencias-offline">'+
                                             '<span class="glyphicon glyphicon-info-sign info-mesa" data-toggle="modal" data-target="#modal-info-mesa">'+
@@ -137,8 +189,11 @@ $(document).ready(function () {
                                         '</div>';
             figure_parent.removeClass('materia-online').addClass('materia-offline materia-examen');
         }else{
+            var dia = datos['dia'] || datos['fecha_dma'];
+            var hora_inicio = datos['hora_inicio'] || '';
+            var hora_fin = datos['hora_fin'] || '';
             markup_descripcion_back =   '<div class="descripcion descripcion-back">'+
-                                            '<p>'+datos['dia']+'<br>'+datos['hora_inicio']+' - '+datos['hora_fin']+'<br>'+
+                                            '<p>'+dia+'<br>'+hora_inicio+' - '+hora_fin+'<br>'+
                                             datos['lugar'] +' '+ datos['aula'] +'</p>'+
                                         '</div>';
             if (datos['en_curso']){
@@ -156,21 +211,16 @@ $(document).ready(function () {
         figure_parent.append(markup_descripcion_back);
     }
 
-    // Manejo de botones en item materia
-    $('.flip-card-btn-back, .flip-card-btn-front').click(function () {
-        var card = $(this).parent().parent()[0];
-        $(card).toggleClass('flipped');
-    });
-
-    $('#modal-info-mesa').on('show.bs.modal', function(e) {
+    //Completa los datos del modal para las mesas de examen.
+    function set_modal_data(e, modal) {
         var card_parent = $(e.relatedTarget).parents().get(2); //obtenemos el elemento card relacionado
         var materia = $(card_parent).data('materia');
         var meta = JSON.parse($(card_parent).find('input[name=meta]').val());
-        var nombre_materia = meta[materia].split(/:|\n/)[1];
         var evento = $(card_parent).find('input[name=evento]')[0];
         var datos = get_datos_evento(JSON.parse($(evento).val()));
-        var titulo_modal = $(this).find('.modal-title')[0];
-        var cuerpo_modal = $(this).find('.modal-body')[0];
+        var nombre_materia = datos.materia;
+        var titulo_modal = $(modal).find('.modal-title')[0];
+        var cuerpo_modal = $(modal).find('.modal-body')[0];
         var lista_profesores = datos['profesores'].split(';');
         $(titulo_modal).addClass('text-center');
         titulo_modal.innerHTML = datos['titulo'];
@@ -184,16 +234,5 @@ $(document).ready(function () {
         });
         tabla += '</tbody></table></div>';
         cuerpo_modal.innerHTML = tabla;
-        console.log(cuerpo_modal);
-    });
-
-    function initialize() {
-        var mapProp = {
-            center:new google.maps.LatLng(-43.2493016,-65.3076351),
-            zoom:13,
-            mapTypeId:google.maps.MapTypeId.ROADMAP
-        };
-        var map=new google.maps.Map($('.mapa-container')[0],mapProp);
     }
-    google.maps.event.addDomListener(window, 'load', initialize);
 })

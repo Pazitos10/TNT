@@ -47,9 +47,12 @@ El evento de tipo clase se corresponderá con el dictado de clases en un cuatrim
 		* Clase Práctica.
 		* Clase Teórica.
 		* Clase de consulta.
-		* Parcial.
+		* <#> Parcial. Por ejemplo: *1er Parcial, 2do Parcial*
+		* Recuperatorio <#> parcial. Por ejemplo: *Recuperatorio 2do parcial*
+		* Exámen Final
 
-			![](https://k61.kn3.net/B/9/8/E/2/F/1BB.png)
+		Por ejemplo:
+		![](https://k61.kn3.net/B/9/8/E/2/F/1BB.png)
 	* Como Fecha:
 		* Si se trata de una Clase de consulta o un Parcial:
 			* Ingrese la fecha de ocurrencia como fecha de inicio y fecha de fin.
@@ -79,7 +82,7 @@ A Junio de 2016, el listado de materias correspondiente a la carrera de [Licenci
 
 | Código | Asignatura                                          | anio | Cuatrimestre | Nombre Calendario                                           | ID del Calendario                                |
 |--------|-----------------------------------------------------|-----|--------------|-------------------------------------------------------------|------------------------------------------------------|
-| EXAME  | Mesas de Exámenes                            	   |     |              | EXAME - Mesas de Exámenes									  | nubkn5itvfi3n25bpv0mkgps84@group.calendar.google.com |
+| EXAME  | Mesas de Exámenes                            	   |     |              | EXAME - Mesas de Exámenes									  | fpjl7d9peh03r2r7oos2pc32es@group.calendar.google.com |
 | IF001  | Elementos de informática                            | 1   | 1            | IF001 - Elementos de informática                            | aod40c9ls454d9jqsh7oetc910@group.calendar.google.com |
 | MA045  | Algebra                                             | 1   | 1            | MA045 - Algebra                                             | 5cv4ur5p3enrbvjlt875us5qes@group.calendar.google.com |
 | IF002  | Expresión de Problemas y algoritmos                 | 1   | 1            | IF002 - Expresión de Problemas y algoritmos                 | jrjdur8jrdkktb4b87ctfh9nt4@group.calendar.google.com |

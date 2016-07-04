@@ -7,9 +7,11 @@ import datetime
 from icalendar import Calendar, Event, vDatetime
 import threading
 import Queue
+from models import Materia
 
 calendarios_data = []
 calendarios_events = []
+BASE_ICS_URL = "https://calendar.google.com/calendar/ical/{}/public/basic.ics"
 
 def get_simple_events(eventos):
     """
@@ -40,40 +42,37 @@ def get_simple_events(eventos):
         event_list.append(simple_event)
     return event_list
 
+def get_meta(materia):
+    meta = {
+        'nombre': materia.nombre,
+        'cuatrimestre': materia.cuatrimestre,
+        'anio': materia.anio
+    }
+    return meta
+
 def fetch_calendarios(ics_urls):
     global calendarios_data, calendarios_events
     calendarios_data = []
     calendarios_events = []
     fetch_parallel(ics_urls)
     result = zip(calendarios_events, calendarios_data)
-    print result
-    print "From calendar.google"
     #corregir el modo de apendear a las listas
     return result
 
 
 def parse_data(ics_url, materia, queue):
     global calendarios_data, calendarios_events
-    CHARSET = 'UTF-8'
-    base_url = "https://calendar.google.com/calendar/ical/{}/public/basic.ics"
-    #ics_urls = {"TNT": "1dgvl4utp25atd5s3nj9dfkbn8", "AW": "4rlbiggjp3u4k2cr1bvcsk5mi4"} #calendars -> bruno
-    #inicio_lectura = datetime.datetime.now()
-    #print "[%s] inicio lectura: %s\n" % (str(inicio_lectura), ics_url)
-    ics_file = urllib2.urlopen(base_url.format(ics_url))
-    gcal = Calendar.from_ical(unicode(ics_file.read(), CHARSET))
-    meta = gcal.walk('vcalendar')[0]['X-WR-CALDESC']
+    ics_file = urllib2.urlopen(BASE_ICS_URL.format(ics_url))
+    gcal = Calendar.from_ical(unicode(ics_file.read(), 'UTF-8'))
+    materia_obj = Materia.objects.filter(codigo=materia).first()
+    meta = get_meta(materia_obj) #gcal.walk('vcalendar')[0]['X-WR-CALDESC']
     events = get_simple_events([e for e in gcal.walk('vevent')])
     calendarios_events.append({materia: events})
     calendarios_data.append({materia: meta})
-    #fin_lectura = datetime.datetime.now()
     ics_file.close()
-    #delta = fin_lectura - inicio_lectura
-    #print "[%s] fin lectura: %s - Delta: %s\n" % (str(fin_lectura), ics_url , str(delta))
-
-    #queue.put(zip(calendarios_events, calendarios_data))
 
 
-def materias_json_to_sqlite():
+def feed_db():
     materias = json.load(open('../materias.json'))
     db = sqlite3.connect("../db.sqlite3")
     columnas = map(lambda nombre: str(nombre), materias[0].keys())
@@ -95,17 +94,3 @@ def fetch_parallel(urls):
     for t in threads:
         t.join()
     return result
-
-def queue_get_all(q):
-    items = []
-    maxItemsToRetreive = 10
-    for numOfItemsRetrieved in range(0, maxItemsToRetreive):
-        try:
-            if numOfItemsRetrieved == maxItemsToRetreive:
-                break
-            items.append(q.get_nowait())
-        except Empty, e:
-            break
-    return items
-#if __name__=='__main__':
-    #materias_json_to_sqlite()

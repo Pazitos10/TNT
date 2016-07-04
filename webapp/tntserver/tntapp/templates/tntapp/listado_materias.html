@@ -20,7 +20,7 @@
                         <div class="panel card-container">
                             <div class="card" data-materia="{{materia}}">
                                 <input data-materia="{{materia}}" type="hidden" name="meta" value="{{meta|encode2json}}">
-                                <input id="{{materia}}" type="hidden" name="evento" value="{{evento|encode2json}}">
+                                <input data-materia="{{materia}}" type="hidden" name="evento" value="{{evento|encode2json}}">
                                 <figure class="panel-body materia-card materia-front" data-materia="{{materia}}">
                                     <div class="descripcion">
                                         <h6 class="nombre-materia"> </h6>
@@ -48,7 +48,7 @@
 
         </div>
     </div>
-    
+
     <div id="modal-info-mesa" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -64,6 +64,6 @@
 {% endblock content %}
 {% block scripts %}
     <script src="http://maps.googleapis.com/maps/api/js"></script>
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="{% static 'js/jquery-ui.js' %}"></script>
     <script src="{% static 'js/calendarios.js' %}"></script>
 {% endblock scripts %}
