@@ -46,7 +46,7 @@ En entornos de desarrollo, se utilizará el comando runserver como sigue:
 
 Donde carpeta_de_proyecto es equivalente al directorio en el cual puede visualizarse el archivo manage.py
 
-Si es la primera vez que ejecuta el servidor, lo mejor es aplicar las migraciones para tener la última versión de la base de datos.
+Si es la primera vez que ejecuta el servidor, lo mejor es aplicar las migraciones para tener la última versión del esquema de la base de datos.
 
     (ditenv)$ python manage.py migrate
 
