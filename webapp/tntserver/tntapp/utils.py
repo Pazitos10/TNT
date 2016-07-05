@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import json
-import sqlite3
 import urllib2
 import datetime
 import threading
@@ -56,17 +54,3 @@ def parse_data(ics_url, materia):
     if len(eventos) > 0:
         events_id = update_events(eventos, materia)
     ics_file.close()
-
-def feed_db():
-    materias = json.load(open('../materias.json'))
-    db = sqlite3.connect("../db.sqlite3")
-    columnas = map(lambda nombre: str(nombre), materias[0].keys())
-    str_col = "(" + ",".join(columnas) + ")"
-    query = 'insert into tntapp_materia '+ str_col + ' values (?,?,?,?,?,?)'
-    for materia in materias:
-        c = db.cursor()
-        c.execute(query, materia.values())
-        c.execute("select * from tntapp_materia")
-        print c.fetchall()
-        db.commit()
-        c.close()

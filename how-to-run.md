@@ -31,7 +31,15 @@ Luego:
 
 #### Paso 3: Correr el servidor
 
-En entornos de desarrollo, se utilizará el comando runserver como sigue:
+Si es la primera vez que ejecuta el servidor, lo mejor es aplicar las migraciones para tener la última versión del esquema de la base de datos.
+
+    (ditenv)$ python manage.py migrate
+
+A continuación, inicializamos la base de datos con la información de las materias:
+
+    (ditenv)$ python manage.py initdb
+
+Luego levantamos el servidor de desarrollo:
 
     (ditenv)carpeta_de_proyecto$ python manage.py runserver
     Performing system checks...
@@ -42,15 +50,9 @@ En entornos de desarrollo, se utilizará el comando runserver como sigue:
     Starting development server at http://127.0.0.1:8000/
     Quit the server with CONTROL-C.
 
-
-
 Donde carpeta_de_proyecto es equivalente al directorio en el cual puede visualizarse el archivo manage.py
 
-Si es la primera vez que ejecuta el servidor, lo mejor es aplicar las migraciones para tener la última versión del esquema de la base de datos.
-
-    (ditenv)$ python manage.py migrate
-
-Luego, ejecutamos el servidor:
+Si las migraciones ya han sido ejecutadas con anterioridad y la base de datos ya tiene el esquema actualizado y los datos cargados, solo ejecutamos el servidor:
 
     (ditenv)$ python manage.py runserver
 
