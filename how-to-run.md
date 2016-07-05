@@ -100,4 +100,4 @@ Donde veremos lo siguiente:
 
 ![](https://k60.kn3.net/A/E/1/4/9/D/16E.png)
 
-A la izquierda un listado de todos los eventos registrados en los diferentes calendarios de la cuenta horarios.dit y a la derecha un mapa que indicará la posición en el mapa de los diferentes lugares de dictado para los eventos mencionados anteriormente.
+A la izquierda un listado de todos los eventos registrados en los diferentes calendarios de la cuenta horarios.dit@gmail.com y a la derecha un mapa que indicará la posición de los diferentes lugares de dictado para los eventos mencionados anteriormente.
