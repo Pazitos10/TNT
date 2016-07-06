@@ -60,7 +60,7 @@ Utilizando otra terminal, situarse en el mismo directorio que en el paso 3 y eje
 
     (ditenv)carpeta_de_proyecto$ celery -A tntserver worker -B -l info
 
-| Opción | Utitlidad |
+| Opción | Utilidad |
 |-------|-----------|
 |  -A, --app   | Instancia de aplicación (celery) a invocar. Fue definida en [celery.py](https://github.com/Pazitos10/TNT/blob/master/webapp/tntserver/tntserver/celery.py#L9)           |
 | worker | Indica a Celery que ejecute un worker dedicado para la/s tarea/s definidas en nuestra instancia de aplicacion celery. |
