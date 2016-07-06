@@ -60,13 +60,22 @@ Si las migraciones ya han sido ejecutadas con anterioridad y la base de datos ya
 
 Utilizando otra terminal, situarse en el mismo directorio que en el paso 3 y ejecutar:
 
-    (ditenv)carpeta_de_proyecto$ celery -A tntserver worker -l info
+    (ditenv)carpeta_de_proyecto$ celery -A tntserver worker -B -l info
+
+| Opción | Utitlidad |
+|-------|-----------|
+|  -A, -app   | Instancia de aplicación (celery) a invocar. Fue definida en [celery.py](https://github.com/Pazitos10/TNT/blob/master/webapp/tntserver/tntserver/celery.py#L9)           |
+| worker | Indica a Celery que ejecute un worker dedicado para la/s tarea/s definidas en nuestra instancia de aplicacion celery. |
+|  -B   | Activa el scheduler de celery llamado Beat. Configurado en [settings.py](https://github.com/Pazitos10/TNT/blob/master/webapp/tntserver/tntserver/settings.py#L8)  |
+|  -l, --loglevel | Logging level, se debe elegir entre : DEBUG, INFO, WARNING, ERROR, CRITICAL, o FATAL. |
+
+[Más información](http://docs.celeryproject.org/en/latest/genindex.html) sobre las opciones disponibles.
 
 La salida a ese comando, mostrará entre otras cosas:
 
     ...
     [tasks]
-    . tntapp.tasks.fetch_async
+    . tntapp.tasks.watch_calendars_task
     . tntserver.celery.debug_task
 
     [2016-07-04 21:39:35,590: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
@@ -78,7 +87,7 @@ Lo cual indica que todo funciona correctamente.
 
 Opcionalmente, puede ejecutarse el ultimo comando y dejar a Celery correr en background como sigue:
 
-    (ditenv)carpeta_de_proyecto$ celery -A tntserver worker &
+    (ditenv)carpeta_de_proyecto$ celery -A tntserver worker -B &
 
 Para detener a los workers, podremos hacer uso del comando kill. Podemos consultar el pid de los mismos y utilizar dicha informacion para eliminarlos como se muestra a continuación:
 
@@ -92,7 +101,7 @@ Si se deseara eliminar a todos los workers sin esperar a que terminen sus tareas
 
 #### Paso 5: Utilizar la aplicación normalmente
 
-Celery corre una tarea que se encargará de verificar que los datos locales son consistentes con los datos de Google Calendar, y en caso contrario, actualiza los datos locales. Dado que dicha tarea es asincrónica no detiene el funcionamiento normal de la aplicación.
+Celery corre automáticamente una tarea cada 5 minutos que se encargará de verificar que los datos locales son consistentes con los datos de Google Calendar, y en caso contrario, actualiza los datos locales. Dado que dicha tarea es asincrónica no detiene el funcionamiento normal de la aplicación.
 
 En un browser, nos dirigimos a la direccion:
 
