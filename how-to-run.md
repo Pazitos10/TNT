@@ -10,8 +10,6 @@ Luego:
 
     $ sudo pip install virtualenv virtualenvwrapper
 
-
-
 #### Paso 1:  Crear un virtualenv y comenzar a usarlo
 
     $ mkvirtualenv --python='python2' <nombre_entorno>
@@ -64,10 +62,10 @@ Utilizando otra terminal, situarse en el mismo directorio que en el paso 3 y eje
 
 | Opción | Utitlidad |
 |-------|-----------|
-|  -A, -app   | Instancia de aplicación (celery) a invocar. Fue definida en [celery.py](https://github.com/Pazitos10/TNT/blob/master/webapp/tntserver/tntserver/celery.py#L9)           |
+|  -A, --app   | Instancia de aplicación (celery) a invocar. Fue definida en [celery.py](https://github.com/Pazitos10/TNT/blob/master/webapp/tntserver/tntserver/celery.py#L9)           |
 | worker | Indica a Celery que ejecute un worker dedicado para la/s tarea/s definidas en nuestra instancia de aplicacion celery. |
 |  -B   | Activa el scheduler de celery llamado Beat. Configurado en [settings.py](https://github.com/Pazitos10/TNT/blob/master/webapp/tntserver/tntserver/settings.py#L8)  |
-|  -l, --loglevel | Logging level, se debe elegir entre : DEBUG, INFO, WARNING, ERROR, CRITICAL, o FATAL. |
+|  -l, --loglevel   | Logging level, se debe elegir entre : DEBUG, INFO, WARNING, ERROR, CRITICAL, o FATAL. |
 
 [Más información](http://docs.celeryproject.org/en/latest/genindex.html) sobre las opciones disponibles.
 
