@@ -9,7 +9,6 @@ router.register(r'materia', MateriaViewSet)
 
 urlpatterns = [
     url(r'^$', MateriaList.as_view(), name='list'),
-    url(r'^sync$', sincronizarConCalendario, name='sync'),
     url(r'^nuevo$', MateriaCreation.as_view(), name='new'),
     url(r'^editar/(?P<pk>\d+)$', MateriaUpdate.as_view(), name='edit'),
     url(r'^borrar/(?P<pk>\d+)$', MateriaDelete.as_view(), name='delete'),

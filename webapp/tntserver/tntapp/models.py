@@ -58,9 +58,37 @@ class EventoMateria(models.Model):
     @classmethod
     def cleanup(self, eventos_actuales):
         eventos_db = [e.id_evento for e in EventoMateria.objects.all()]
+        print len(eventos_db), len(eventos_actuales)
         if len(eventos_db) != len(eventos_actuales):
             print "limpiando"
             for ev_id in eventos_db:
                 if not ev_id in eventos_actuales:
                     EventoMateria.objects.filter(pk=ev_id).delete()
                     #print str(ev_id) + ' no estaba en: ' + str(eventos_actuales)
+
+    @classmethod
+    def update_events(self, eventos, materia_id):
+        """
+            Verifica si los eventos de una materia fueron modificados en
+            google calendar y actualiza la informacion local.
+        """
+        for event in eventos:
+            defaults = {'comienzo' : event['DTSTART'].dt,
+                        'fin'       : event['DTEND'].dt,
+                        'direccion' : unicode(event['LOCATION']),
+                        'titulo'    : unicode(event['SUMMARY']),
+                        'descrip'   : unicode(event['DESCRIPTION']),
+                        'se_repite' : True if event.has_key('RRULE') else False,
+                        'ts_last_modified': event['LAST-MODIFIED'].dt,
+                        'materia_id': materia_id }
+
+            ev_materia, created = EventoMateria.objects.get_or_create(
+                id_evento = str(event['UID']),
+                defaults  = defaults
+            )
+            if ev_materia:
+                if event['LAST-MODIFIED'].dt > ev_materia.ts_last_modified:
+                    ev_materia.update(defaults)
+                    print "Evento " + str(event['UID']) +" materia: "+ materia_id +" fue modificado!"
+            else:
+                print "Evento " + str(event['UID']) +" materia: "+ materia_id +" creado!"

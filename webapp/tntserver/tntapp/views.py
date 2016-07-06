@@ -1,14 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function
-#Google Calendar
-import httplib2
-import os
-from apiclient import discovery
-import oauth2client
-from oauth2client import client
-from oauth2client import tools
-
-#Django
 import datetime
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -25,72 +15,17 @@ from rest_framework import viewsets
 from .serializers import *
 from .models import *
 from .utils import *
-from .tasks import fetch_async
 
+# Google calendar interaction
+import urllib2
+import threading
+from icalendar import Calendar
 
-SCOPES = 'https://www.googleapis.com/auth/calendar'
-CLIENT_SECRET_FILE = 'client_secret.json'
-APPLICATION_NAME = 'tntserver'
-
-def get_credentials():
-    """Gets valid user credentials from storage.
-
-    If nothing has been stored, or if the stored credentials are invalid,
-    the OAuth2 flow is completed to obtain the new credentials.
-
-    Returns:
-        Credentials, the obtained credential.
-    """
-    credential_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) +  "/tntserver/" #os.path.join(home_dir, '.credentials')
-    #print(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    if not os.path.exists(credential_dir):
-        os.makedirs(credential_dir)
-    credential_path = os.path.join(credential_dir,
-                                   'client_secret.json')
-
-    print("busco credenciales de " + credential_path)
-
-    store = oauth2client.file.Storage(credential_path)
-    credentials = store.get()
-    if not credentials or credentials.invalid:
-        flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
-        flow.user_agent = APPLICATION_NAME
-        credentials = tools.run(flow, store)
-        print('Storing credentials to ' + credential_path)
-    return credentials
+events_id = []
 
 def calendarios(request):
-    #actualiza asincronicamente los calendarios
-    fetch_calendarios(Materia.get_calendars_url())
     materias = Materia.objects.all()
     return render(request, "calendarios.html",{'materias': materias})
-
-def sincronizarConCalendario(request):
-    credentials = get_credentials()
-    http = credentials.authorize(httplib2.Http())
-    service = discovery.build('calendar', 'v3', http=http)
-    calendarios = service.calendarList().list().execute()
-    calendarios = calendarios.values()
-    for c in calendarios:
-        print(c)
-
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
-    eventsResult = service.events().list(
-        calendarId='q4sjke29116cd0ld3275p9ch9g@group.calendar.google.com', timeMin=now, maxResults=10, singleEvents=True,
-        orderBy='startTime').execute()
-    events = eventsResult.get('items', [])
-
-    if not events:
-        print('No upcoming events found.')
-    eventos =[]
-    for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        eventos.append((start, event['summary']))
-
-    return render(request, "tntapp/calendarios.html",{'eventos': eventos, 'calendarios': calendarios})
-
-
 
 class MateriaList(ListView):
     model = Materia
@@ -100,7 +35,6 @@ class MateriaList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(MateriaList, self).get_context_data(**kwargs)
-        fetch_async.apply_async((Materia.get_calendars_url(),), countdown=20)
         context['materias'] = Materia.objects.all()
         return context
 
@@ -113,7 +47,6 @@ class MateriaUpdate(UpdateView):
     model = Materia
     success_url = reverse_lazy('materias:list')
     fields = ['nombre', 'lugar_de_dictado', 'anio_de_cursado', 'id_calendario']
-
 
 class MateriaDelete(DeleteView):
     model = Materia
@@ -135,3 +68,29 @@ class AsistenciaViewSet(viewsets.ModelViewSet):
 class MateriaViewSet(viewsets.ModelViewSet):
     queryset = Materia.objects.all()
     serializer_class = MateriaSerializer
+
+#La siguiente vista no lleva url
+def watch_calendars_view(urls):
+    global events_id
+    events_id = []
+    threads = []
+    for materia_id, url in urls.iteritems():
+        args = (url, materia_id)
+        threads.append(threading.Thread(target=parse_data, args=args))
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    EventoMateria.cleanup(events_id)
+
+#La siguiente vista no lleva url
+def parse_data(ics_url, materia):
+    global events_id
+    base_url = "https://calendar.google.com/calendar/ical/{}/public/basic.ics"
+    ics_file = urllib2.urlopen(base_url.format(ics_url))
+    gcal = Calendar.from_ical(unicode(ics_file.read(), 'UTF-8'))
+    eventos = [e for e in gcal.walk('vevent')]
+    events_id.extend([e['UID'] for e in eventos])
+    if len(eventos) > 0:
+        EventoMateria.update_events(eventos, materia)
+    ics_file.close()
