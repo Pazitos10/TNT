@@ -23,19 +23,24 @@ Luego:
 
 *Observación*: el prefijo (ditenv) en el interprete bash indica que se está utilizando el virtualenv creado con anterioridad. Verifiquelo antes de intentar instalar los paquetes. De otro modo, el procedimento podría fallar.
 
-**Para el sistema operativo**: Es necesario instalar [RabbitMQ](https://www.rabbitmq.com/), para hacer funcionar las tareas asincrónicas de [Celery](http://docs.celeryproject.org/en/latest/) (Paquete instalado como dependencia de python).
+**Para el sistema operativo**: Es necesario instalar [RabbitMQ](https://www.rabbitmq.com/), para hacer funcionar las tareas asincrónicas de [Celery](http://docs.celeryproject.org/en/latest/) (Paquete instalado como dependencia de python) y [Redis](http://redis.io/) para la comunicacion asincrónica de Django con el cliente a través de [channels](http://channels.readthedocs.io/en/latest/) y [websockets](https://developer.mozilla.org/es/docs/WebSockets-840092-dup).
 
     $ sudo apt-get install rabbitmq-server
+
+[Guía de instalación de Redis](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-redis)
+
+**Observación**: Llevar a cabo sólo lo detallado en el  apartado "Installing Redis" para instalar y comprobar la correcta ejecución
 
 #### Paso 3: Correr el servidor
 
 Si es la primera vez que ejecuta el servidor, lo mejor es aplicar las migraciones para tener la última versión del esquema de la base de datos.
 
-    (ditenv)$ python manage.py migrate
+    (ditenv)carpeta_de_proyecto$
+    (ditenv)carpeta_de_proyecto$ python manage.py migrate
 
 A continuación, inicializamos la base de datos con la información de las materias:
 
-    (ditenv)$ python manage.py initdb
+    (ditenv)carpeta_de_proyecto$ python manage.py initdb
 
 Luego levantamos el servidor de desarrollo:
 
@@ -99,7 +104,8 @@ Si se deseara eliminar a todos los workers sin esperar a que terminen sus tareas
 
 #### Paso 5: Utilizar la aplicación normalmente
 
-Celery corre automáticamente una tarea cada 5 minutos que se encargará de verificar que los datos locales son consistentes con los datos de Google Calendar, y en caso contrario, actualiza los datos locales. Dado que dicha tarea es asincrónica no detiene el funcionamiento normal de la aplicación.
+Celery corre automáticamente una tarea cada 1 minuto que se encargará de verificar que los datos locales son consistentes con los datos de Google Calendar, y en caso contrario, actualiza los datos locales y notifica a los usuarios conectados para que estos actualicen su lista si así lo desean.
+Dado que dicha tarea es asincrónica no detiene el funcionamiento normal de la aplicación.
 
 En un browser, nos dirigimos a la direccion:
 
@@ -110,3 +116,20 @@ Donde veremos lo siguiente:
 ![](https://k60.kn3.net/A/E/1/4/9/D/16E.png)
 
 A la izquierda un listado de todos los eventos registrados en los diferentes calendarios de la cuenta horarios.dit@gmail.com y a la derecha un mapa que indicará la posición de los diferentes lugares de dictado para los eventos mencionados anteriormente.
+
+Si en Google Calendar se agrega, modifica o elimina un evento, el usuario recibe una notificación para actualizar la lista.
+
+Por ejemplo, en la siguiente imagen se muestra la lista de eventos locales y los cargados en google calendar (en este último, crearemos un evento)
+![preevento](https://k61.kn3.net/D/1/F/8/A/A/9CE.png)
+
+Aquí vemos el evento ya creado.
+![postevento](https://k61.kn3.net/B/3/3/5/E/D/D2A.png)
+
+En la terminal se puede ver como Celery toma la nueva tarea para ejecutarla (terminal de la derecha: "Received Task...")
+![terminal](https://k61.kn3.net/7/8/0/9/0/F/00A.png)
+
+Como resultado de la ejecución, en la pantalla de los usuarios se muestra la notificación correspondiente. Sólo se mostrarán las actualizaciones cuando el usuario haga clic en el símbolo de recarga de la misma.
+![notificacion](https://k60.kn3.net/2/4/C/6/7/0/B5D.png)
+
+Podemos observar como resultado, el evento que creamos en Google Calendar, ya esta presente en los datos locales y disponibles para todos los usuarios.
+![resultado](https://k61.kn3.net/F/0/8/7/C/7/1BC.png)

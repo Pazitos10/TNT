@@ -2,3 +2,4 @@
 webapp/tntserver/db.sqlite3
 webapp/tntserver/tntserver/client_secret.json
 webapp/tntserver/env/*
+webapp/celerybeat-schedule

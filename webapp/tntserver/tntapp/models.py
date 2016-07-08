@@ -10,9 +10,6 @@ class Materia(models.Model):
     descripcion = models.CharField(max_length=100, null=True)
     id_calendario = models.CharField(max_length=100)
 
-    def __unicode__(self):
-        return self.nombre
-
     @classmethod
     def get_calendars_url(self):
         urls = {}
@@ -23,9 +20,12 @@ class Materia(models.Model):
     def get_meta(self):
         return '%d° Cuatrimestre - %d° Año' % (self.cuatrimestre, self.anio)
 
+    def __unicode__(self):
+        return self.nombre
+
 class Asistencia(models.Model):
     id_alumno = models.CharField(max_length=50)
-    id_materia = models.ForeignKey(Materia, on_delete=models.CASCADE, related_name='materias')
+    id_materia = models.ForeignKey(Materia, on_delete=models.CASCADE, related_name='asistencias')
     fecha = models.DateTimeField()
     latitud = models.FloatField(null = True)
     longitud = models.FloatField(null = True)
@@ -41,26 +41,14 @@ class EventoMateria(models.Model):
     materia = models.ForeignKey(Materia, on_delete=models.CASCADE, related_name='eventos')
     ts_last_modified = models.DateTimeField(null=True, db_index=True)
 
-    def __unicode__(self):
-        return "Evento: %s\n" % (self.id_evento)
-
-    def get_dict(self):
-        d = model_to_dict(self)
-        d['ts_last_modified'] = str(d['ts_last_modified'])
-        return d
-
-    def update(self, fields_dict):
-        for field_name in self.__dict__.keys():
-            if fields_dict.has_key(field_name):
-                self.__dict__[field_name] = fields_dict.get(field_name)
-        self.save()
-
     @classmethod
     def cleanup(self, eventos_actuales):
+        """ Verifica si la lista de eventos de google calendar tiene menos
+            eventos que la local y si es asi, elimina los eventos locales que no
+            existan en google calendar.
+        """
         eventos_db = [e.id_evento for e in EventoMateria.objects.all()]
-        print len(eventos_db), len(eventos_actuales)
         if len(eventos_db) != len(eventos_actuales):
-            print "limpiando"
             for ev_id in eventos_db:
                 if not ev_id in eventos_actuales:
                     EventoMateria.objects.filter(pk=ev_id).delete()
@@ -89,6 +77,20 @@ class EventoMateria(models.Model):
             if ev_materia:
                 if event['LAST-MODIFIED'].dt > ev_materia.ts_last_modified:
                     ev_materia.update(defaults)
-                    print "Evento " + str(event['UID']) +" materia: "+ materia_id +" fue modificado!"
-            else:
-                print "Evento " + str(event['UID']) +" materia: "+ materia_id +" creado!"
+
+    def __unicode__(self):
+        return "Evento: %s\n" % (self.id_evento)
+
+    def get_dict(self):
+        d = model_to_dict(self)
+        d['ts_last_modified'] = str(d['ts_last_modified'])
+        return d
+
+    def update(self, fields_dict):
+        """
+            Actualiza los datos de una instancia de EventoMateria
+        """
+        for field_name in self.__dict__.keys():
+            if fields_dict.has_key(field_name):
+                self.__dict__[field_name] = fields_dict.get(field_name)
+        self.save()

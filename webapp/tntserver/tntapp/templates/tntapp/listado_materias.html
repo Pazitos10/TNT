@@ -12,8 +12,9 @@
                 <span id="search-term-button" class="glyphicon glyphicon-search"></span>
             </div>
         </div>
+        {% include 'tntapp/notification.html' %}
         <div class="scroll-list">
-            {% include 'tntapp/scroll-list-content.html' with materias=materias %}
+            {% include 'tntapp/scroll-list-content.html' with materias=materias notifications=True%}
         </div>
     </div>
     <div class="col-lg-7">
@@ -39,4 +40,5 @@
     <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="{% static 'js/jquery-ui.js' %}"></script>
     <script src="{% static 'js/calendarios.js' %}"></script>
+    <script src="{% static 'js/listado-eventos.js' %}"></script>
 {% endblock scripts %}

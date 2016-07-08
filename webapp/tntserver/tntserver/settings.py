@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tntapp',
     'rest_framework',
+    'channels',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -132,3 +133,14 @@ STATICFILES_DIRS = (
 #         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
 #     ]
 # }
+
+# Channels settings
+CHANNEL_LAYERS = {
+"default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(os.environ.get('REDIS_HOST', 'localhost'), 6379)],
+        },
+        "ROUTING": "tntapp.routing.channel_routing",
+    },
+}

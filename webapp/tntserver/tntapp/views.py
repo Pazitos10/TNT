@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import ListView
@@ -9,7 +10,10 @@ from django.views.generic.edit import (
     UpdateView,
     DeleteView
 )
+from channels import Group
 from rest_framework import viewsets
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 
 # Nuestra app
 from .serializers import *
@@ -17,15 +21,14 @@ from .models import *
 from .utils import *
 
 # Google calendar interaction
+import json
 import urllib2
 import threading
 from icalendar import Calendar
 
 events_id = []
-
-def calendarios(request):
-    materias = Materia.objects.all()
-    return render(request, "calendarios.html",{'materias': materias})
+new_content = False
+deleted_content = False
 
 class MateriaList(ListView):
     model = Materia
@@ -69,9 +72,16 @@ class MateriaViewSet(viewsets.ModelViewSet):
     queryset = Materia.objects.all()
     serializer_class = MateriaSerializer
 
+def update_events(request):
+    html = ''
+    if request.is_ajax():
+        materias = Materia.objects.all()
+        html = render_to_string('tntapp/scroll-list-content.html', {'materias': materias, 'notifications': False})
+    return HttpResponse(html)
+
 #La siguiente vista no lleva url
 def watch_calendars_view(urls):
-    global events_id
+    global events_id, deleted_content
     events_id = []
     threads = []
     for materia_id, url in urls.iteritems():
@@ -81,16 +91,37 @@ def watch_calendars_view(urls):
         t.start()
     for t in threads:
         t.join()
-    EventoMateria.cleanup(events_id)
+    #print "new?:%s deleted?:%s" % (str(new_content), str(deleted_content))
+    deleted_content = EventoMateria.cleanup(events_id)
+    # print "new? %s , deleted? %s" % (str(new_content),str(deleted_content))
+    # if new_content or deleted_content:
+    #     print "llamando a push"
+    #     push_notification()
 
 #La siguiente vista no lleva url
 def parse_data(ics_url, materia):
-    global events_id
+    global events_id, new_content
     base_url = "https://calendar.google.com/calendar/ical/{}/public/basic.ics"
     ics_file = urllib2.urlopen(base_url.format(ics_url))
     gcal = Calendar.from_ical(unicode(ics_file.read(), 'UTF-8'))
     eventos = [e for e in gcal.walk('vevent')]
     events_id.extend([e['UID'] for e in eventos])
     if len(eventos) > 0:
-        EventoMateria.update_events(eventos, materia)
+        new_content = EventoMateria.update_events(eventos, materia)
     ics_file.close()
+
+@receiver(post_save, sender=Asistencia)
+@receiver(post_save, sender=EventoMateria)
+@receiver(post_delete, sender=EventoMateria)
+def push_notification(**kwargs):
+    """Envia una notificacion al cliente para que refresque la lista de eventos
+        cuando hay novedades en Google Calendar y
+        consecuentemente a nivel local, es decir, avisa a los usuarios si:
+            - Se crea un evento
+            - Se modifica un evento
+            - Se elimina un evento
+    """
+    notification = {
+        "text": json.dumps({'user_need_refresh': 1}),
+    }
+    Group("notifications").send(notification)

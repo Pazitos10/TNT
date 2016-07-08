@@ -1,11 +1,20 @@
 $(document).ready(function () {
+    subscribe_to_updates();
 
-    $.each($('input[name=evento]'), function() {
-        process_event_data(this);
-    });
+    window.process_events = function (){
+        localStorage.setItem("notifications", localStorage.getItem("notifications") || 0);
+        var notifications = Number(localStorage.getItem("notifications"));
+        if (!notifications)
+            $('#alert-updates').fadeOut();
+        $.each($('input[name=evento]'), function() {
+            process_event_data(this);
+        });
+    }
+
+    window.process_events();
 
     // Manejo de botones en item materia
-    $('.flip-card-btn-back, .flip-card-btn-front').click(function () {
+    $(document).delegate('.flip-card-btn-back, .flip-card-btn-front','click',function () {
         var card = $(this).parent().parent()[0];
         $(card).toggleClass('flipped');
     });
@@ -25,6 +34,22 @@ $(document).ready(function () {
         var map=new google.maps.Map($('.mapa-container')[0],mapProp);
     }
     google.maps.event.addDomListener(window, 'load', initialize);
+
+    function subscribe_to_updates(){
+        var host = 'ws://'+ window.location.host + '/';
+        var ws = new WebSocket(host);
+        ws.onmessage = function(message) {
+            var notifications = JSON.parse(message.data)['user_need_refresh'];
+            localStorage.setItem("notifications", Number(notifications));
+            if (localStorage.getItem("notifications")){
+                $('#alert-updates').fadeIn();
+            }
+        }
+        ws.onopen = function() {
+            //console.log('WS Connecting to receive updates!');
+            this.send('WS Connecting to receive updates!');
+        }
+    }
 
     /**
     *   Coloca el nombre de la materia que toma mesa de examen

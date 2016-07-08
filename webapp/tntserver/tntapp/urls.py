@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^borrar/(?P<pk>\d+)$', MateriaDelete.as_view(), name='delete'),
     url(r'^mapa$', verMapa, name='mapa'),
     url(r'^api/', include(router.urls)),
-    url(r'^calendarios/$', calendarios, name='calendarios'),
+    url(r'^update_events/', update_events, name='update_events'),
     #url(r'^api/asis', asistenciaAPI, name='asistenciaAPI')
     #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
