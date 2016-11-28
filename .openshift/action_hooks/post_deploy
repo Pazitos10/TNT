@@ -1,0 +1,16 @@
+#!/bin/bash
+# This is a simple post deploy hook executed after your application
+# is deployed and started.  This script gets executed directly, so
+# it could be python, php, ruby, etc.
+
+source $OPENSHIFT_DATA_DIR/virtualenv/bin/activate
+echo "Executing 'python $OPENSHIFT_REPO_DIR/app/manage.py migrate --noinput'"
+python "$OPENSHIFT_REPO_DIR"app/manage.py migrate --noinput
+
+echo "Executing 'python $OPENSHIFT_REPO_DIR/app/manage.py collectstatic --settings=tntserver.settings --noinput'"
+mkdir -p "$OPENSHIFT_REPO_DIR"app/static
+cd "$OPENSHIFT_REPO_DIR"app/static && rm * -r
+python "$OPENSHIFT_REPO_DIR"app/manage.py collectstatic --settings=tntserver.settings --noinput
+
+run_asgi_server_script="$OPENSHIFT_HOME_DIR"app-root/repo/.openshift/action_hooks/run_asgi_server
+cd && chmod 700 $run_asgi_server_script && ./$run_asgi_server_script

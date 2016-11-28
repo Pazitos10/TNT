@@ -1,0 +1,26 @@
+#!/bin/bash
+# This is a simple post deploy hook executed after your application
+# is deployed and started.  This script gets executed directly, so
+# it could be python, php, ruby, etc.
+
+source $OPENSHIFT_DATA_DIR/virtualenv/bin/activate
+
+function launch_asgi_server() {
+    echo "Relaunching runworker and daphne!"
+    cd $OPENSHIFT_REPO_DIR/app
+    killall daphne && killall python && killall celery
+    python manage.py runworker -v2 > "$OPENSHIFT_LOG_DIR"/runworker.log 2>&1 &
+    daphne tntserver.asgi:channel_layer -p 8443 -b $OPENSHIFT_DIY_IP -v2 > "$OPENSHIFT_LOG_DIR"/daphne.log 2>&1 &
+    celery -A tntserver worker -B -l info > "$OPENSHIFT_LOG_DIR"/celery.log 2>&1 &
+}
+
+function create_log_files() {
+    echo "creating log files"
+    cd
+    touch "$OPENSHIFT_LOG_DIR"/runworker.log
+    touch "$OPENSHIFT_LOG_DIR"/daphne.log
+    touch "$OPENSHIFT_LOG_DIR"/celery.log
+}
+
+echo "Executing 'daphne [port=8443]', manage.py runworker and celery for tntserver"
+create_log_files && launch_asgi_server
