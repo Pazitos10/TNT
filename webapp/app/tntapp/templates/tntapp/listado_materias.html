@@ -1,0 +1,47 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title%} DIT-TW | Horarios {% endblock title%}
+
+{% block content%}
+    <div class="col-lg-5 col-sm-5" id="content-tabla">
+        <div class="form-search-container">
+            <div class="search-input navbar-form">
+                <input type="text" id="search-term-input" class="form-control search-input" placeholder="Ej: Elementos de Informática" name="search">
+                <span id="search-term-button" class="glyphicon glyphicon-search" title="Buscar"></span>
+                <span id="search-filter-button" class="glyphicon glyphicon-chevron-down" title="Opciones de búsqueda"></span>
+            </div>
+        </div>
+        <div class="form-results-container">
+            <div id="results">
+                {% include 'tntapp/notification.html' %}
+                <div class="scroll-list">
+                    {% include 'tntapp/scroll-list-content.html' with materias=materias notifications=True%}
+                </div>
+            </div>
+            {% include 'tntapp/filtros-de-busqueda.html' %}
+        </div>
+    </div>
+    <div class="col-lg-7 col-sm-7" id="content-mapa">
+        <div class="mapa-container">
+
+        </div>
+    </div>
+
+    <div id="modal-info-mesa" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body">
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+{% endblock content %}
+{% block scripts %}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzXt_V5uCNwHlkmdzq2gYdz9lpdgO6glU"></script>
+    <script src="{% static 'js/jquery-ui.js' %}"></script>
+    <script src="{% static 'js/calendarios.js' %}"></script>
+{% endblock scripts %}

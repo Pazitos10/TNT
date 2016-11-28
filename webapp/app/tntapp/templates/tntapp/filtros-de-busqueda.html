@@ -1,0 +1,29 @@
+<div class="well" id="options">
+    <form class="form-horizontal" id="form-filter-options">
+        <legend>Filtros de búsqueda</legend>
+        <div class="form-group">
+            <label for="tipo-evento">Tipo de evento: </label>
+            <select class="form-control" name="tipo-evento" id="tipo-evento">
+                <option>Todos</option>
+                <option>Clase Práctica</option>
+                <option>Clase Teórica</option>
+                <option>Exámen Final</option>
+                <option>Parcial</option>
+                <option>Recuperatorio</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="checkbox" name="eventos-hoy" id="eventos-hoy" value="">
+            <label for="eventos-hoy">Eventos de Hoy</label>
+        </div>
+        <div class="form-group">
+            <input type="checkbox" name="eventos-en-curso" id="eventos-en-curso" value="">
+            <label for="eventos-en-curso">Eventos en curso</label>
+        </div>
+        <hr>
+        <div class="form-group text-right">
+            <button type="button" name="button" class="btn btn-primary" id="btn-guardar-options">Buscar</button>
+            <button type="button" name="button" class="btn btn-default" id="btn-cancelar-options">Cancelar</button>
+        </div>
+    </form>
+</div>
