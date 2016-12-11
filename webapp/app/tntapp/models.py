@@ -21,7 +21,9 @@ class Materia(models.Model):
         return urls
 
     def get_meta(self):
-        return '%d° Cuatrimestre - %d° Año' % (self.cuatrimestre, self.anio)
+        if self.nombre != 'Mesa de Exámen':
+            return '%d° Cuatrimestre - %d° Año' % (self.cuatrimestre, self.anio)
+        return ''
 
     def __unicode__(self):
         return self.nombre

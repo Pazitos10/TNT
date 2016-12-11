@@ -1,5 +1,7 @@
 $('#options, #no-results').hide();
 $(document).ready(function () {
+    var map = {};
+    var markers = [];
     set_filter_options();
     subscribe_to_updates();
     buscar_eventos($("#search-term-input").val());
@@ -17,9 +19,10 @@ $(document).ready(function () {
     window.process_events();
 
     // Manejo de botones en item materia
-    $(document).delegate('.flip-card-btn-back, .flip-card-btn-front','click',function () {
+    $(document).delegate('.flip-card-btn-back, .flip-card-btn-front','click',function (e) {
         var card = $(this).parent().parent()[0];
         $(card).toggleClass('flipped');
+        set_marker(card);
     });
 
     $(document).delegate('#search-filter-button.glyphicon-chevron-down','click',function () {
@@ -78,7 +81,7 @@ $(document).ready(function () {
 
     $("#search-term-button").click(function () {
         buscar_eventos($("#search-term-input").val());
-    })
+    });
 
     //Inicializa el mapa en pantalla
     function initialize() {
@@ -87,7 +90,7 @@ $(document).ready(function () {
             zoom:13,
             mapTypeId:google.maps.MapTypeId.ROADMAP
         };
-        var map=new google.maps.Map($('.mapa-container')[0],mapProp);
+        map=new google.maps.Map($('.mapa-container')[0],mapProp);
     }
     google.maps.event.addDomListener(window, 'load', initialize);
 
@@ -162,7 +165,8 @@ $(document).ready(function () {
             hora_fin: get_hora(fecha_fin),
             se_repite : evento.se_repite,
             en_curso : evento_en_curso(fecha_comienzo, fecha_fin, evento.se_repite),
-            fecha_dma : get_fecha(fecha_comienzo)
+            fecha_dma : get_fecha(fecha_comienzo),
+            coordenadas: {lat: -43.249763, lng: -65.3084728} //Edificio Aulas
         }
         var terminos = ['aula','lugar', 'profesores', 'materia'];
         var value = '';
@@ -177,6 +181,11 @@ $(document).ready(function () {
                     value = value.substr(0, 35)+'...';
             }
             datos[terminos[i]] = value;
+            if (datos['lugar']){
+              if (datos['lugar'].toLowerCase().includes("cc")
+                  || datos['lugar'].toLowerCase().includes("dit"))
+                datos['coordenadas'] = {lat: -43.2576106, lng: -65.3077018}; //DIT
+            }
         }
         return datos;
     }
@@ -240,6 +249,35 @@ $(document).ready(function () {
             return true;
         else
             return false;
+    }
+
+    function set_marker(card) {
+      empty_markers();
+      var evento = $(card).find('input[name=evento]')[0];
+      var datos = get_datos_evento(JSON.parse($(evento).val()));
+      if (datos.coordenadas){
+        var marker = new google.maps.Marker({
+         position: datos.coordenadas,
+         map: map
+        });
+        map.setCenter(datos.coordenadas);
+        map.setZoom(18);
+        markers.push(marker);
+        google.maps.event.addListener(marker , 'click', function(){
+          var infowindow = new google.maps.InfoWindow({
+            content: datos["titulo"],
+            position: datos.coordenadas,
+          });
+          infowindow.open(map);
+        });
+      } else
+        console.log('no tenia coordenadas');
+    }
+
+    function empty_markers() {
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+      }
     }
 
     //completamos la parte trasera de cada item materia

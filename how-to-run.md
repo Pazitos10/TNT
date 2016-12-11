@@ -23,13 +23,11 @@ Luego:
 
 *Observación*: el prefijo (ditenv) en el interprete bash indica que se está utilizando el virtualenv creado con anterioridad. Verifiquelo antes de intentar instalar los paquetes. De otro modo, el procedimento podría fallar.
 
-**Para el sistema operativo**: Es necesario instalar [RabbitMQ](https://www.rabbitmq.com/), para hacer funcionar las tareas asincrónicas de [Celery](http://docs.celeryproject.org/en/latest/) (Paquete instalado como dependencia de python) y [Redis](http://redis.io/) para la comunicacion asincrónica de Django con el cliente a través de [channels](http://channels.readthedocs.io/en/latest/) y [websockets](https://developer.mozilla.org/es/docs/WebSockets-840092-dup).
-
-    $ sudo apt-get install rabbitmq-server
+**Para el sistema operativo**: Es necesario instalar [Redis](http://redis.io/) para hacer funcionar las tareas asincrónicas de [Celery](http://docs.celeryproject.org/en/latest/) (Paquete instalado como dependencia de python)
 
 [Guía de instalación de Redis](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-redis)
 
-**Observación**: Llevar a cabo sólo lo detallado en el  apartado "Installing Redis" para instalar y comprobar la correcta ejecución
+**Observación**: Llevar a cabo sólo lo detallado en el  apartado "Installing Redis" para instalar y comprobar la correcta ejecución.
 
 #### Paso 3: Correr el servidor
 
@@ -80,8 +78,9 @@ La salida a ese comando, mostrará entre otras cosas:
     [tasks]
     . tntapp.tasks.watch_calendars_task
     . tntserver.celery.debug_task
+    . tntserver.celery_file.debug_task
 
-    [2016-07-04 21:39:35,590: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+    [2016-07-04 21:39:35,590: INFO/MainProcess] Connected to redis://localhost:6379/0
     [2016-07-04 21:39:35,704: INFO/MainProcess] mingle: searching for neighbors
     [2016-07-04 21:39:36,726: INFO/MainProcess] mingle: all alone
     ...
@@ -126,10 +125,13 @@ Aquí vemos el evento ya creado.
 ![postevento](https://k61.kn3.net/B/3/3/5/E/D/D2A.png)
 
 En la terminal se puede ver como Celery toma la nueva tarea para ejecutarla (terminal de la derecha: "Received Task...")
+
 ![terminal](https://k61.kn3.net/7/8/0/9/0/F/00A.png)
 
 Como resultado de la ejecución, en la pantalla de los usuarios se muestra la notificación correspondiente. Sólo se mostrarán las actualizaciones cuando el usuario haga clic en el símbolo de recarga de la misma.
-![notificacion](https://k60.kn3.net/2/4/C/6/7/0/B5D.png)
+
+![notificacion](https://k60.kn3.net/D/B/6/2/2/B/69F.png)
 
 Podemos observar como resultado, el evento que creamos en Google Calendar, ya esta presente en los datos locales y disponibles para todos los usuarios.
-![resultado](https://k61.kn3.net/F/0/8/7/C/7/1BC.png)
+
+![resultado](https://k60.kn3.net/1/F/B/9/7/2/A3D.png)

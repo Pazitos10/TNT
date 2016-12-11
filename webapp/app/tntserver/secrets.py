@@ -1,6 +1,7 @@
 import os, json
 
-SETTINGS_PROFILE = 'production'
+#SETTINGS_PROFILE = 'production'
+SETTINGS_PROFILE = 'development'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'w6r2649*rg5^n*&=79o%@-%m*t#87!jg-8(nn-k)ykj_u1tyu3'
 # secrets_path = os.environ.get('OPENSHIFT_DATA_DIR')
