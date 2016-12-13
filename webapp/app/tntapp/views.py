@@ -110,7 +110,7 @@ def get_materias():
     """
     mes_actual = datetime.now().month
     cuatrimestre_actual = 1 if mes_actual < 8 else 2
-    return Materia.objects.filter(cuatrimestre=1)
+    return Materia.objects.filter(cuatrimestre=cuatrimestre_actual)
 
 def parse_params(query_string):
     result = parse_qs(query_string, keep_blank_values=True)
