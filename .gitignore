@@ -1,5 +1,5 @@
 *.pyc
-webapp/tntserver/db.sqlite3
-webapp/tntserver/tntserver/client_secret.json
-webapp/tntserver/env/*
-webapp/celerybeat-schedule
+webapp/app/tntserver/db.sqlite3
+webapp/app/tntserver/tntserver/client_secret.json
+webapp/app/tntserver/env/*
+webapp/app/celerybeat-schedule
