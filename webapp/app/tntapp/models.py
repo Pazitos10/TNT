@@ -34,7 +34,7 @@ class Materia(models.Model):
             eventos = filter(lambda e: e.es_hoy(), eventos)
         if params['en_curso'][0] == 'true':
             eventos = filter(lambda e: e.en_curso(), eventos)
-        if params['tipo_evento'][0] != u'Todos':
+        if params['tipo_evento'][0].decode('string_escape') != u'Todos':
             titulo = params['tipo_evento'][0].lower()
             eventos = filter(lambda e: titulo in e.titulo.encode('utf8').lower(), eventos)
         return eventos

@@ -77,7 +77,9 @@ def update_events(request):
     if not request.is_ajax():
         return HttpResponse('')
     params = parse_params(request.META["QUERY_STRING"])
-    materias = Materia.objects.all()
+    mesas = Materia.objects.filter(nombre__icontains="Exámen")
+    materias = get_materias()
+    materias = list(itertools.chain(materias, mesas))
     eventos = get_eventos(materias, params)
     html = render_to_string('tntapp/scroll-list-content.html',
             {'materias': materias,
@@ -90,15 +92,25 @@ def search_events(request):
         return HttpResponse('')
     params = parse_params(request.META["QUERY_STRING"])
     if len(params['termino']) > 0:
-        materias = Materia.objects.filter(nombre__icontains=params['termino'][0])
+        mesas = Materia.objects.filter(nombre__icontains="Exámen", descripcion__icontains=params['termino'][0])
+        materias = get_materias().filter(nombre__icontains=params['termino'][0])
+        materias = list(itertools.chain(materias, mesas))
     else:
-        materias = Materia.objects.all()
+        materias = get_materias()
     eventos = get_eventos(materias, params)
     html = render_to_string('tntapp/scroll-list-content.html',
                             {'materias': materias,
                             'notifications': False,
                             'eventos':eventos})
     return HttpResponse(html)
+
+def get_materias():
+    """ Prefiltrado de materias por cuatrimestre.
+        Devuelve las del cuatrimestre actual
+    """
+    mes_actual = datetime.now().month
+    cuatrimestre_actual = 1 if mes_actual < 8 else 2
+    return Materia.objects.filter(cuatrimestre=1)
 
 def parse_params(query_string):
     result = parse_qs(query_string, keep_blank_values=True)
@@ -127,14 +139,9 @@ def watch_calendars_view(urls):
         t.start()
     for t in threads:
         t.join()
-    #print "new?:%s deleted?:%s" % (str(new_content), str(deleted_content))
     deleted_content = EventoMateria.cleanup(events_id)
-    # print "new? %s , deleted? %s" % (str(new_content),str(deleted_content))
-    # if new_content or deleted_content:
-    #     print "llamando a push"
-    #     push_notification()
 
-#La siguiente vista no lleva url
+
 def parse_data(ics_url, materia):
     global events_id, new_content
     base_url = "https://calendar.google.com/calendar/ical/{}/public/basic.ics"
@@ -145,6 +152,7 @@ def parse_data(ics_url, materia):
     if len(eventos) > 0:
         new_content = EventoMateria.update_events(eventos, materia)
     ics_file.close()
+
 
 @receiver(post_save, sender=Asistencia)
 @receiver(post_save, sender=EventoMateria)
